@@ -1,5 +1,12 @@
 <resources>
-    <string name="app_name">Treepository</string>
+    <string name="app_name">Columbia Tree Tagging App</string>
     <string name="title_activity_maps">Map</string>
     <string name="menu_button_txt">Menu</string>
+    <string name="title_activity_navigation_drawer">NavigationDrawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
