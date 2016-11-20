@@ -12,7 +12,7 @@
         android:layout_alignEnd="@+id/textView7" />
 
     <TextView
-        android:text="forestry@columbiasc.net"
+        android:text="drhollst@columbiasc.net"
         android:gravity="center"
         android:textAppearance="?android:textAppearanceMedium"
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="(803)545-3860"
+        android:text="(803)545-3862"
         android:textAppearance="?android:textAppearanceMedium"
         android:autoLink="phone"
         android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="Forestry and Beautification Department"
+        android:text="Columbia Tree and Appearance Commission"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
         android:gravity="center"
@@ -47,7 +47,7 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="Sara Hollar, Superintendent\n2910 Colonial Drive\nColumbia, SC 29203"
+        android:text="Ms. Sara Hollar\n1210 Colonial Drive\nColumbia, SC 29203"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView6"
