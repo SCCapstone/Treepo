@@ -8,6 +8,12 @@
             android:title="Contact Information" />
         <item android:id="@+id/nav_login" android:icon="@android:drawable/ic_menu_slideshow"
             android:title="Login" />
+        <item android:title="Add Tree "
+            android:id="@+id/nav_treeEdit"
+            android:icon="@android:drawable/ic_menu_slideshow" />
+        <item android:title="Tree Info"
+            android:id="@+id/nav_treeInfo"
+            android:icon="@android:drawable/ic_menu_slideshow" />
 
     </group>
 

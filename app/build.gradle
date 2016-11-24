@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
     buildToolsVersion "25.0.0"
+
     defaultConfig {
         applicationId "com.example.user.treepository"
         minSdkVersion 15
@@ -20,6 +21,12 @@ android {
             debuggable true
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
@@ -31,5 +38,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:9.8.0'
     compile 'com.google.android.gms:play-services:9.8.0'
     compile 'com.android.support:design:24.2.1'
+    compile 'com.google.firebase:firebase-database:9.0.2'
+    compile 'com.firebase:firebase-client-android:2.5.0'
+
+
     testCompile 'junit:junit:4.12'
 }
+apply plugin: 'com.google.gms.google-services'
