@@ -48,71 +48,21 @@ public class MainActivity extends AppCompatActivity
      */
     private GoogleApiClient client;
 
-    private EditText editTextType;
-    private EditText editTextAddress;
-    private EditText editTextAge;
-    private EditText editTextHeight;
-    private EditText editTextLifespan;
-    private EditText editTextDescription;
-    private Button buttonSubmit;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
-        editTextType = (EditText) findViewById(R.id.editTextType);
-        editTextAddress = (EditText) findViewById(R.id.editTextAddress);
-        editTextAge = (EditText) findViewById(R.id.editTextAge);
-        editTextHeight = (EditText) findViewById(R.id.editTextHeight);
-        editTextLifespan = (EditText) findViewById(R.id.editTextLifespan);
-        editTextDescription = (EditText) findViewById(R.id.editTextDescription);
+        setContentView(R.layout.activity_main);
 
         Firebase.setAndroidContext(this);
-        /*
-        //Click Listener for button
-        buttonSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Creating firebase object
-                Firebase ref = new Firebase(Config.FIREBASE_URL);
-
-                //Getting values to store
-                String type = editTextType.getText().toString().trim();
-                String address = editTextAddress.getText().toString().trim();
-                String age = editTextAge.getText().toString().trim();
-                String height = editTextHeight.getText().toString().trim();
-                String lifespan = editTextLifespan.getText().toString().trim();
-                String description = editTextAddress.getText().toString().trim();
-
-                //Creating Person object
-                TreeObject tree = new TreeObject();
-
-                //Adding values
-                tree.setType(type);
-                tree.setAddress(address);
-                tree.setAge(age);
-                tree.setHeight(height);
-                tree.setLifeSpan(lifespan);
-                tree.setDescription(description);
-
-                //Storing values to firebase
-                ref.child("Tree").setValue(tree);
-            }
-        });
-        */
-
 
         sMapFragment = SupportMapFragment.newInstance();
 
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
