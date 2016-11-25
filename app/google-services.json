@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "581607542991",
+    "firebase_url": "https://treepo-25afc.firebaseio.com",
+    "project_id": "treepo-25afc",
+    "storage_bucket": "treepo-25afc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581607542991:android:937e7c583fd6f2cc",
+        "android_client_info": {
+          "package_name": "com.example.user.treepository"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581607542991-vdk0bfkltsdfmtbgi6s3iqves9uh2nia.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.user.treepository",
+            "certificate_hash": "D65C76444535D216ADD28F68A993D5FCEAA3CD83"
+          }
+        },
+        {
+          "client_id": "581607542991-o5aca9j2g4t3uun93rvgt1ur28ljc8r2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtJUVU6N-9KK8pW8_eMEn_7Y2j3SDrgP0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581607542991-o5aca9j2g4t3uun93rvgt1ur28ljc8r2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
