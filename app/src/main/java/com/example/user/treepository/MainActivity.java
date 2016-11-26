@@ -118,6 +118,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_treeInfo) {
             fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).commit();
             setTitle("Tree Info");
+        } else if(id == R.id.nav_registration) {
+            fm.beginTransaction().replace(R.id.content_frame, new RegistrationFragment()).commit();
+            setTitle("Registration");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
