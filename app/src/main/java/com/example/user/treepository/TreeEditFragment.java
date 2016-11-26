@@ -1,6 +1,7 @@
 package com.example.user.treepository;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Created by brycebware on 11/23/16.
@@ -24,6 +26,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     private EditText editTextLifespan;
     private EditText editTextDescription;
     private Button buttonSubmit;
+    private FirebaseAuth auth;
     View view;
     @Nullable
     @Override
@@ -38,6 +41,11 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         editTextLifespan = (EditText) view.findViewById(R.id.editTextLifespan);
         editTextDescription = (EditText) view.findViewById(R.id.editTextDescription);
         buttonSubmit.setOnClickListener(this);
+//
+//        if(auth == null){
+//            startActivity(new Intent(getActivity(),LoginFragment.class));
+//        }
+
         return view;
 
     }

@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
             fm.beginTransaction().replace(R.id.content_frame, new ImportFragment()).commit();
             setTitle("Contact Information");
         } else if (id == R.id.nav_login) {
-            fm.beginTransaction().replace(R.id.content_frame, new MainFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_frame, new LoginFragment()).commit();
             setTitle("Log In");
         } else if (id == R.id.nav_treeEdit) {
             fm.beginTransaction().replace(R.id.content_frame, new TreeEditFragment()).commit();
