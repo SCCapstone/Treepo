@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -75,6 +76,8 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         pd.dismiss();
                         if (task.isSuccessful()) {
+                            getActivity().finish();
+                            startActivity(new Intent(getActivity(), MainActivity.class));
                             Toast.makeText(getActivity(), "Registration Successful", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getActivity(), "Registration failed, please try again", Toast.LENGTH_LONG).show();

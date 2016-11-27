@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,9 +42,12 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         editTextLifespan = (EditText) view.findViewById(R.id.editTextLifespan);
         editTextDescription = (EditText) view.findViewById(R.id.editTextDescription);
         buttonSubmit.setOnClickListener(this);
-//
-//        if(auth == null){
-//            startActivity(new Intent(getActivity(),LoginFragment.class));
+
+//        if(auth.getCurrentUser() == null){
+//            getActivity().finish();
+//            //Changing this to redirect to Log In screen as soon I figure out how.
+//            //Also login doesn't persist after redirect...
+//            startActivity(new Intent(getActivity(), MainActivity.class));
 //        }
 
         return view;
@@ -75,6 +79,10 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
 
         //Storing values to firebase
         ref.child("Tree").setValue(tree);
+
+        //We need a notification that indicates a successful database write, can't figure
+        //out how to check that yet before displaying this toast.
+        //Toast.makeText(getActivity(),"Tree data written successfully", Toast.LENGTH_SHORT).show();
     }
 }
 
