@@ -32,9 +32,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+
+
 
 
 public class MainActivity extends AppCompatActivity
@@ -132,8 +137,14 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        Marker tree = mMap.addMarker(new MarkerOptions()
+                              .position(sydney)
+                              .title("Tree in Sydney")
+                              .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
     }
 
     /**
