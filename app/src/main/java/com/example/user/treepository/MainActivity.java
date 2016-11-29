@@ -144,6 +144,31 @@ public class MainActivity extends AppCompatActivity
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
+        Firebase ref = new Firebase(Config.FIREBASE_URL);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    //Getting the data from snapshot
+                    TreeObject tree = postSnapshot.getValue(TreeObject.class);
+
+                    //get latitude and longitude of tree
+                    LatLng nextTree = new LatLng(tree.getLat(), tree.getLong());
+                    String treeTitle = tree.getType();
+
+                    //place tree marker on map
+                    mMap.addMarker(new MarkerOptions()
+                            .position(nextTree)
+                            .title(treeTitle)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+
 
     }
 
