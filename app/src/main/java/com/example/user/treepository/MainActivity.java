@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.location.Location;
 
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +29,8 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
+
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -136,13 +139,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng sydney = new LatLng(-34, 151);
-        Marker tree = mMap.addMarker(new MarkerOptions()
-                              .position(sydney)
-                              .title("Tree in Sydney")
-                              .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         Firebase ref = new Firebase(Config.FIREBASE_URL);
         ref.addValueEventListener(new ValueEventListener() {
@@ -168,8 +164,7 @@ public class MainActivity extends AppCompatActivity
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
-
-
+        });
     }
 
     /**
