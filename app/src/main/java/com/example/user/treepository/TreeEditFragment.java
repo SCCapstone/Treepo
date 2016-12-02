@@ -3,6 +3,7 @@ package com.example.user.treepository;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by brycebware on 11/23/16.
@@ -28,6 +30,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     private EditText editTextDescription;
     private Button buttonSubmit;
     private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authListener;
     View view;
     @Nullable
     @Override
@@ -42,13 +45,17 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         editTextLifespan = (EditText) view.findViewById(R.id.editTextLifespan);
         editTextDescription = (EditText) view.findViewById(R.id.editTextDescription);
         buttonSubmit.setOnClickListener(this);
+        auth = FirebaseAuth.getInstance();
 
-//        if(auth.getCurrentUser() == null){
-//            getActivity().finish();
-//            //Changing this to redirect to Log In screen as soon I figure out how.
-//            //Also login doesn't persist after redirect...
-//            startActivity(new Intent(getActivity(), MainActivity.class));
-//        }
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Toast.makeText(getActivity(), "Please log in to edit a tree", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
 
         return view;
 
@@ -83,6 +90,19 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         //We need a notification that indicates a successful database write, can't figure
         //out how to check that yet before displaying this toast.
         //Toast.makeText(getActivity(),"Tree data written successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(authListener != null)
+            auth.removeAuthStateListener(authListener);
     }
 }
 

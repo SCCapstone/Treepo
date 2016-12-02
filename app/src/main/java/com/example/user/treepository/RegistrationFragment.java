@@ -21,6 +21,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.Executor;
 
@@ -31,6 +34,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     private EditText editTextPassword;
     private ProgressDialog pd;
     private FirebaseAuth auth;
+    private DatabaseReference database;
     View view;
 
 
@@ -43,6 +47,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         btnRegister = (Button) view.findViewById(R.id.btnRegister);
         editTextEmail = (EditText) view.findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) view.findViewById(R.id.editTextPassword);
+        database = FirebaseDatabase.getInstance().getReference().child("Users");
 
         btnRegister.setOnClickListener(this);
 
@@ -52,7 +57,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     }
 
     private void registerNewUser(){
-        String email = editTextEmail.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
         if(TextUtils.isEmpty(email)){
@@ -74,8 +79,12 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        FirebaseUser user = auth.getCurrentUser();
                         pd.dismiss();
                         if (task.isSuccessful()) {
+//                            String userID = user.getUid();
+//                            DatabaseReference currentUser = database.child(userID);
+//                            currentUser.child("Email").setValue(email);
                             getActivity().finish();
                             startActivity(new Intent(getActivity(), MainActivity.class));
                             Toast.makeText(getActivity(), "Registration Successful", Toast.LENGTH_LONG).show();
