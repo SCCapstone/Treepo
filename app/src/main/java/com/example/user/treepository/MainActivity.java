@@ -216,8 +216,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onChildRemoved(DataSnapshot snapshot) {
-                //get data for the tree that was removed
-                TreeObject deletedTree = snapshot.getValue(TreeObject.class);
 
                 //get marker associated with this tree
                 Marker thisTreeMarker = treeMarkers.get(snapshot.getKey());

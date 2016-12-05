@@ -89,6 +89,9 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         tree.setLifeSpan(lifespan);
         tree.setDescription(description);
 
+        tree.setLatitude(-50);
+        tree.setLongitude(-50);
+
         //Storing values to firebase
         //use of push generates unique key
         rootRef.push().setValue(tree);

@@ -15,19 +15,19 @@ public class TreeObject {
     }
 
 
-    public float getLat() {
+    public float getLatitude() {
         return latitude;
     }
 
-    public void setLat(float latitude) {
+    public void setLatitude(float latitude) {
         this.latitude = latitude;
     }
 
-    public float getLong() {
+    public float getLongitude() {
         return longitude;
     }
 
-    public void setLong(float longitude) {
+    public void setLongitude(float longitude) {
         this.longitude = longitude;
     }
 
