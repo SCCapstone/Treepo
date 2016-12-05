@@ -199,14 +199,19 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChildChanged(DataSnapshot snapshot, String prevChildName) {
                 //get data for the tree that was changed
-                TreeObject changedTree = snapshot.getValue(TreeObject.class);
+                Float newLat =  Float.parseFloat(snapshot.child("latitude").getValue().toString());
+                Float newLong = Float.parseFloat(snapshot.child("longitude").getValue().toString());
+
+                //get latitude and longitude of tree
+                LatLng nextTree = new LatLng(newLat, newLong);
+                String treeTitle = snapshot.child("type").getValue().toString();
 
                 //get marker associated with this tree
                 Marker thisTreeMarker = treeMarkers.get(snapshot.getKey());
 
                 //change relevant marker information
-                thisTreeMarker.setPosition(new LatLng(changedTree.getLat(), changedTree.getLong()));
-                thisTreeMarker.setTitle(changedTree.getType());
+                thisTreeMarker.setPosition(nextTree);
+                thisTreeMarker.setTitle(treeTitle);
             }
 
             @Override
@@ -216,6 +221,7 @@ public class MainActivity extends AppCompatActivity
 
                 //get marker associated with this tree
                 Marker thisTreeMarker = treeMarkers.get(snapshot.getKey());
+                treeMarkers.remove(snapshot.getKey());
 
                 //remove marker for deleted tree from map
                 thisTreeMarker.remove();
