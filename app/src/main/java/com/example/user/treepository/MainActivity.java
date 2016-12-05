@@ -178,8 +178,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChildAdded(DataSnapshot snapshot, String prevChildName) {
                 //Getting the data from snapshot
-                float newLat = (float)snapshot.child("latitude").getValue();
-                float newLong = (float)snapshot.child("longitude").getValue();
+                float newLat =  -10//(float)snapshot.child("latitude").getValue();
+                float newLong = -10//(float)snapshot.child("longitude").getValue();
 
                 //get latitude and longitude of tree
                 LatLng nextTree = new LatLng(newLat, newLong);
