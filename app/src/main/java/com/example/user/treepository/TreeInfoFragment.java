@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.ValueEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.ValueEventListener;
 
 
 /**
@@ -27,7 +29,7 @@ public class TreeInfoFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_treeinfo,container,false);
         textViewTreeInfo = (TextView) view.findViewById(R.id.textViewTreeInfo);
-        Firebase ref = new Firebase(Config.FIREBASE_URL);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -49,7 +51,7 @@ public class TreeInfoFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });

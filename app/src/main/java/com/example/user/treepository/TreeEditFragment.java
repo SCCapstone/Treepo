@@ -13,7 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -64,7 +68,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
 
         //Creating firebase object
-        Firebase ref = new Firebase(Config.FIREBASE_URL);
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
         //Getting values to store
         String type = editTextType.getText().toString().trim();
@@ -87,7 +91,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
 
         //Storing values to firebase
         //use of push generates unique key
-        ref.push().setValue(tree);
+        rootRef.push().setValue(tree);
 
         //We need a notification that indicates a successful database write, can't figure
         //out how to check that yet before displaying this toast.

@@ -22,11 +22,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+//import com.firebase.client.Firebase;
+//import com.firebase.client.FirebaseError;
+//import com.firebase.client.ValueEventListener;
+
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ChildEventListener;
 
 import com.google.android.gms.appindexing.Action;
@@ -53,8 +56,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-                   OnMapReadyCallback,
-                   OnMarkerClickListener {
+                   OnMapReadyCallback {
+//                   OnMarkerClickListener {
 
     SupportMapFragment sMapFragment;
     private GoogleMap mMap;
@@ -75,7 +78,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Firebase.setAndroidContext(this);
 
         sMapFragment = SupportMapFragment.newInstance();
 
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         sMapFragment.getMapAsync(this);
-        mMap.setOnMarkerClickListener(this);
+        //mMap.setOnMarkerClickListener(this);
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().add(R.id.map, sMapFragment).commit();
 
@@ -170,8 +172,8 @@ public class MainActivity extends AppCompatActivity
         }
         mMap.setMyLocationEnabled(true);
 
-        Firebase ref = new Firebase(Config.FIREBASE_URL);
-        ref.addChildEventListener(new ChildEventListener() {
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot snapshot, String prevChildName) {
@@ -217,23 +219,35 @@ public class MainActivity extends AppCompatActivity
                 //remove marker for deleted tree from map
                 thisTreeMarker.remove();
             }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                System.out.println(error.toString());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot snapshot, String prevChildKey) {
+
+            }
         });
     }
 
     //handles marker click events by pulling up tree info page with appropriate information
-    public void onMarkerClick(Marker clickedMarker) {
-        FragmentManager fm = getFragmentManager();
-        android.support.v4.app.FragmentManager sFm = getSupportFragmentManager();
-
-        //set the key of the tree which was clicked
-        currentTreeKey = clickedMarker.getTag().toString();
-
-        if (sMapFragment.isAdded())
-            sFm.beginTransaction().hide(sMapFragment).commit();
-
-        fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).commit();
-        setTitle("Tree Info");
-    }
+//    public boolean onMarkerClick(Marker clickedMarker) {
+//        FragmentManager fm = getFragmentManager();
+//        android.support.v4.app.FragmentManager sFm = getSupportFragmentManager();
+//
+//        //set the key of the tree which was clicked
+//        currentTreeKey = clickedMarker.getTag().toString();
+//
+//        if (sMapFragment.isAdded())
+//            sFm.beginTransaction().hide(sMapFragment).commit();
+//
+//        fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).commit();
+//        setTitle("Tree Info");
+//
+//        return true;
+//    }
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
