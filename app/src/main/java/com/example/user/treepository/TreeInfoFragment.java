@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.firebase.client.Firebase;
 import com.firebase.client.ValueEventListener;
 import com.firebase.client.DataSnapshot;
@@ -30,18 +31,20 @@ public class TreeInfoFragment extends Fragment {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    //Getting the data from snapshot
-                    TreeObject tree = postSnapshot.getValue(TreeObject.class);
+                if (MainActivity.currentTreeKey != "") {
+                    DataSnapshot treeSnapshot = snapshot.child(MainActivity.currentTreeKey);
+                    TreeObject tree = treeSnapshot.getValue(TreeObject.class);
 
                     //Adding it to a string
-                    String string = "Type: "+tree.getType()+"\nAddress: "+tree.getAddress();
-                    string += "\nAge: "+tree.getAge()+"\nHeight: "+tree.getHeight();
-                    string += "\nExpected Lifespan: "+tree.getLifeSpan();
-                    string += "\nDescription: "+tree.getDescription()+"\n\n";
+                    String string = "Type: " + tree.getType() + "\nAddress: " + tree.getAddress();
+                    string += "\nAge: " + tree.getAge() + "\nHeight: " + tree.getHeight();
+                    string += "\nExpected Lifespan: " + tree.getLifeSpan();
+                    string += "\nDescription: " + tree.getDescription() + "\n\n";
 
                     //Displaying it on textview
                     textViewTreeInfo.setText(string);
+                } else {
+                    textViewTreeInfo.setText("No tree Selected");
                 }
             }
 

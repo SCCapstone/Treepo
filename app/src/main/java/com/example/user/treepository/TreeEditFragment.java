@@ -32,6 +32,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authListener;
     View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,7 +86,8 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         tree.setDescription(description);
 
         //Storing values to firebase
-        ref.child("Tree").setValue(tree);
+        //use of push generates unique key
+        ref.push().setValue(tree);
 
         //We need a notification that indicates a successful database write, can't figure
         //out how to check that yet before displaying this toast.

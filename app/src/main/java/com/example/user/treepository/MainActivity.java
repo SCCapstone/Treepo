@@ -26,6 +26,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.ChildEventListener;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
 
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -49,10 +51,19 @@ import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener,
+                   OnMapReadyCallback,
+                   OnMarkerClickListener {
 
     SupportMapFragment sMapFragment;
     private GoogleMap mMap;
+    mMap.setOnMarkerClickListener(this);
+
+    //hashmap associates database keys with tree markers
+    private static HashMap<String, Marker> treeMarkers = new HashMap<String, Marker>();
+    //key of the tree which was most recently clicked
+    public static String currentTreeKey = "Default Tree";
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -158,31 +169,69 @@ public class MainActivity extends AppCompatActivity
         }
         mMap.setMyLocationEnabled(true);
 
-//        Firebase ref = new Firebase(Config.FIREBASE_URL);
-//        ref.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot snapshot) {
-//                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-//                    //Getting the data from snapshot
-//                    TreeObject tree = postSnapshot.getValue(TreeObject.class);
-//
-//                    //get latitude and longitude of tree
-//                    LatLng nextTree = new LatLng(tree.getLat(), tree.getLong());
-//                    String treeTitle = tree.getType();
-//
-//                    //place tree marker on map
-//                    mMap.addMarker(new MarkerOptions()
-//                            .position(nextTree)
-//                            .title(treeTitle)
-//                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(FirebaseError firebaseError) {
-//                System.out.println("The read failed: " + firebaseError.getMessage());
-//            }
-//        });
+        Firebase ref = new Firebase(Config.FIREBASE_URL);
+        ref.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot snapshot, String prevChildKey) {
+                //Getting the data from snapshot
+                TreeObject tree = snapshot.getValue(TreeObject.class);
+
+                //get latitude and longitude of tree
+                LatLng nextTree = new LatLng(tree.getLat(), tree.getLong());
+                String treeTitle = tree.getType();
+
+                //place tree marker on map
+                Marker thisTreeMarker = mMap.addMarker(new MarkerOptions()
+                        .position(nextTree)
+                        .title(treeTitle)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
+
+                //associate database key with new marker
+                thisTreeMarker.setTag(snapshot.getKey());
+                treeMarkers.put(snapshot.getKey(), thisTreeMarker);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot snapshot, String prevChildKey) {
+                //get data for the tree that was changed
+                TreeObject changedTree = snapshot.getValue(TreeObject.class);
+
+                //get marker associated with this tree
+                Marker thisTreeMarker = treeMarkers.get(snapshot.getKey());
+
+                //change relevant marker information
+                thisTreeMarker.setPosition(new LatLng(changedTree.getLat(), changedTree.getLong()));
+                thisTreeMarker.setTitle(changedTree.getType());
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot snapshot, String prevChildKey) {
+                //get data for the tree that was removed
+                TreeObject deletedTree = snapshot.getValue(TreeObject.class);
+
+                //get marker associated with this tree
+                Marker thisTreeMarker = treeMarkers.get(snapshot.getKey());
+
+                //remove marker for deleted tree from map
+                thisTreeMarker.remove();
+            }
+        });
+    }
+
+    //handles marker click events by pulling up tree info page with appropriate information
+    public void onMarkerClick(Marker clickedMarker) {
+        FragmentManager fm = getFragmentManager();
+        android.support.v4.app.FragmentManager sFm = getSupportFragmentManager();
+
+        //set the key of the tree which was clicked
+        currentTreeKey = clickedMarker.getTag().toString();
+
+        if (sMapFragment.isAdded())
+            sFm.beginTransaction().hide(sMapFragment).commit();
+
+        fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).commit();
+        setTitle("Tree Info");
     }
 
     /**
