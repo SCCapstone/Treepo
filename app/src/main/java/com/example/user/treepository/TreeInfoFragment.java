@@ -30,24 +30,26 @@ public class TreeInfoFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_treeinfo,container,false);
         textViewTreeInfo = (TextView) view.findViewById(R.id.textViewTreeInfo);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.addValueEventListener(new ValueEventListener() {
+        DatabaseReference defaultRef = ref.child("Default Tree");
+        defaultRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if (MainActivity.currentTreeKey != "") {
-                    DataSnapshot treeSnapshot = snapshot.child(MainActivity.currentTreeKey);
-                    TreeObject tree = treeSnapshot.getValue(TreeObject.class);
-
+                String treeName = snapshot.child("type").getValue().toString();
+                String address = snapshot.child("address").getValue().toString();
+                String age = snapshot.child("age").getValue().toString();
+                String description = snapshot.child("description").getValue().toString();
+                String height = snapshot.child("height").getValue().toString();
+                String lat = snapshot.child("latitude").getValue().toString();
+                String lifeSpan = snapshot.child("lifeSpan").getValue().toString();
+                String longitude = snapshot.child("longitude").getValue().toString();
                     //Adding it to a string
-                    String string = "Type: " + tree.getType() + "\nAddress: " + tree.getAddress();
-                    string += "\nAge: " + tree.getAge() + "\nHeight: " + tree.getHeight();
-                    string += "\nExpected Lifespan: " + tree.getLifeSpan();
-                    string += "\nDescription: " + tree.getDescription() + "\n\n";
+                    String string = "Type: " + treeName + "\nAddress: " + address;
+                    string += "\nAge: " + age + "\nHeight: " + height;
+                    string += "\nExpected Lifespan: " + lifeSpan;
+                    string += "\nDescription: " + description + "\n\n";
 
                     //Displaying it on textview
                     textViewTreeInfo.setText(string);
-                } else {
-                    textViewTreeInfo.setText("No tree Selected");
-                }
             }
 
             @Override
