@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity
 
     SupportMapFragment sMapFragment;
     private GoogleMap mMap;
-    mMap.setOnMarkerClickListener(this);
 
     //hashmap associates database keys with tree markers
     private static HashMap<String, Marker> treeMarkers = new HashMap<String, Marker>();
@@ -91,6 +90,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         sMapFragment.getMapAsync(this);
+        mMap.setOnMarkerClickListener(this);
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().add(R.id.map, sMapFragment).commit();
 
