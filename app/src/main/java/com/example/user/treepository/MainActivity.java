@@ -177,22 +177,23 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onChildAdded(DataSnapshot snapshot, String prevChildName) {
-//                //Getting the data from snapshot
-//                TreeObject tree = snapshot.getValue(TreeObject.class);
-//
-//                //get latitude and longitude of tree
-//                LatLng nextTree = new LatLng(tree.getLat(), tree.getLong());
-//                String treeTitle = tree.getType();
-//
-//                //place tree marker on map
-//                Marker thisTreeMarker = mMap.addMarker(new MarkerOptions()
-//                        .position(nextTree)
-//                        .title(treeTitle)
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
-//
-//                //associate database key with new marker
-//                thisTreeMarker.setTag(snapshot.getKey());
-//                treeMarkers.put(snapshot.getKey(), thisTreeMarker);
+                //Getting the data from snapshot
+                float newLat = (float)snapshot.child("latitude").getValue();
+                float newLong = (float)snapshot.child("longitude").getValue();
+
+                //get latitude and longitude of tree
+                LatLng nextTree = new LatLng(newLat, newLong);
+                String treeTitle = snapshot.child("type").getValue().toString();
+
+                //place tree marker on map
+                Marker thisTreeMarker = mMap.addMarker(new MarkerOptions()
+                        .position(nextTree)
+                        .title(treeTitle)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
+
+                //associate database key with new marker
+                thisTreeMarker.setTag(snapshot.getKey());
+                treeMarkers.put(snapshot.getKey(), thisTreeMarker);
             }
 
             @Override
