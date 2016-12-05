@@ -26,6 +26,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ChildEventListener;
 
 import com.google.android.gms.appindexing.Action;
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity
         ref.addChildEventListener(new ChildEventListener() {
 
             @Override
-            public void onChildAdded(DataSnapshot snapshot, String prevChildKey) {
+            public void onChildAdded(DataSnapshot snapshot, String prevChildName) {
                 //Getting the data from snapshot
                 TreeObject tree = snapshot.getValue(TreeObject.class);
 
@@ -193,7 +194,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onChildChanged(DataSnapshot snapshot, String prevChildKey) {
+            public void onChildChanged(DataSnapshot snapshot, String prevChildName) {
                 //get data for the tree that was changed
                 TreeObject changedTree = snapshot.getValue(TreeObject.class);
 
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot snapshot, String prevChildKey) {
+            public void onChildRemoved(DataSnapshot snapshot) {
                 //get data for the tree that was removed
                 TreeObject deletedTree = snapshot.getValue(TreeObject.class);
 
