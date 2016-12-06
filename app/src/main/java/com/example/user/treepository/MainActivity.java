@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity
             sFm.beginTransaction().hide(sMapFragment).commit();
 
         if (id == R.id.nav_tour) {
-            setTitle("Tree Tour");
+            setTitle("Tree Map");
             if (!sMapFragment.isAdded())
                 sFm.beginTransaction().add(R.id.map, sMapFragment).commit();
             else
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
             setTitle("Tree Edit");
         } else if (id == R.id.nav_treeInfo) {
             fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).commit();
-            setTitle("Tree Info");
+            setTitle("Last Visited Tree");
         } else if (id == R.id.nav_registration) {
             fm.beginTransaction().replace(R.id.content_frame, new RegistrationFragment()).commit();
             setTitle("Registration");
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity
                 //associate database key with new marker
                 thisTreeMarker.setTag(snapshot.getKey());
                 treeMarkers.put(snapshot.getKey(), thisTreeMarker);
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(nextTree));
+                //mMap.animateCamera(CameraUpdateFactory.newLatLng(nextTree));
             }
 
             @Override

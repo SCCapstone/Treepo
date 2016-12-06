@@ -111,7 +111,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editTextLatitude"
-        android:hint="Enter Description" />
+        android:hint="Enter Latitude" />
 
     <TextView
         android:text="Longitude"
@@ -126,7 +126,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editTextLongitude"
-        android:hint="Enter Description" />
+        android:hint="Enter Longitude" />
 
     <Button
         android:text="Submit"
