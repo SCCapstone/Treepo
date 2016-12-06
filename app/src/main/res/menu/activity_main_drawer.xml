@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_tour" android:icon="@android:drawable/ic_menu_camera"
-            android:title="Take the Tour" />
+            android:title="Tree Map" />
         <item android:id="@+id/nav_contact" android:icon="@android:drawable/ic_menu_gallery"
             android:title="Contact Information" />
         <item android:id="@+id/nav_login" android:icon="@android:drawable/ic_menu_slideshow"
@@ -11,7 +12,7 @@
         <item android:title="Add Tree "
             android:id="@+id/nav_treeEdit"
             android:icon="@android:drawable/ic_menu_slideshow" />
-        <item android:title="Tree Info"
+        <item android:title="Last Visited Tree"
             android:id="@+id/nav_treeInfo"
             android:icon="@android:drawable/ic_menu_slideshow" />
         <item android:title="Registration"
