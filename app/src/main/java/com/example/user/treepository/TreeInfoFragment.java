@@ -30,8 +30,8 @@ public class TreeInfoFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_treeinfo,container,false);
         textViewTreeInfo = (TextView) view.findViewById(R.id.textViewTreeInfo);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference defaultRef = ref.child("Default Tree");
-        defaultRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference treeRef = ref.child(MainActivity.currentTreeKey);
+        treeRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 String treeName = snapshot.child("type").getValue().toString();

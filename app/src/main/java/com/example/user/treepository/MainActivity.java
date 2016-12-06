@@ -57,8 +57,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-                   OnMapReadyCallback {
-//                   OnMarkerClickListener {
+                   OnMapReadyCallback,
+                   OnMarkerClickListener {
 
     SupportMapFragment sMapFragment;
     private GoogleMap mMap;
@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         sMapFragment.getMapAsync(this);
-        //mMap.setOnMarkerClickListener(this);
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().add(R.id.map, sMapFragment).commit();
 
@@ -157,6 +156,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        //set up marker click listener
+        mMap.setOnMarkerClickListener(this);
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -236,21 +238,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     //handles marker click events by pulling up tree info page with appropriate information
-//    public boolean onMarkerClick(Marker clickedMarker) {
-//        FragmentManager fm = getFragmentManager();
-//        android.support.v4.app.FragmentManager sFm = getSupportFragmentManager();
-//
-//        //set the key of the tree which was clicked
-//        currentTreeKey = clickedMarker.getTag().toString();
-//
-//        if (sMapFragment.isAdded())
-//            sFm.beginTransaction().hide(sMapFragment).commit();
-//
-//        fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).commit();
-//        setTitle("Tree Info");
-//
-//        return true;
-//    }
+    public boolean onMarkerClick(Marker clickedMarker) {
+        //set the key of the tree which was clicked
+        currentTreeKey = clickedMarker.getTag().toString();
+
+        FragmentManager fm = getFragmentManager();
+        android.support.v4.app.FragmentManager sFm = getSupportFragmentManager();
+
+        //hide map from view
+        if (sMapFragment.isAdded())
+            sFm.beginTransaction().hide(sMapFragment).commit();
+
+        //switch to tree info fragment
+        fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).commit();
+        setTitle("Tree Info");
+
+        return true;
+    }
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
