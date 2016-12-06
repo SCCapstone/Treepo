@@ -1,6 +1,7 @@
 package com.example.user.treepository;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,6 +36,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     private Button buttonSubmit;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authListener;
+    private ProgressDialog pd;
     View view;
 
     @Nullable
@@ -51,6 +53,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         editTextDescription = (EditText) view.findViewById(R.id.editTextDescription);
         buttonSubmit.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
+        pd = new ProgressDialog(getActivity());
 
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -66,6 +69,9 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
 
     }
     public void onClick(View v) {
+        //Progress dialog for editting database
+//        pd.setMessage("Adding new tree...");
+//        pd.show();
 
         //Creating firebase object
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -94,7 +100,15 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
 
         //Storing values to firebase
         //use of push generates unique key
-        rootRef.push().setValue(tree);
+        if(auth.getCurrentUser() != null) {
+            rootRef.push().setValue(tree);
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            Toast.makeText(getActivity(), "New tree added!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getActivity(), "You must log in to add a tree", Toast.LENGTH_SHORT).show();
+        }
+
 
         //We need a notification that indicates a successful database write, can't figure
         //out how to check that yet before displaying this toast.

@@ -26,6 +26,7 @@ import android.widget.TextView;
 //import com.firebase.client.FirebaseError;
 //import com.firebase.client.ValueEventListener;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DataSnapshot;
@@ -156,10 +157,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng zero = new LatLng(0, 0);
-        mMap.addMarker(new MarkerOptions().position(zero)
-                            .title("Tree")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree)));
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -194,6 +191,7 @@ public class MainActivity extends AppCompatActivity
                 //associate database key with new marker
                 thisTreeMarker.setTag(snapshot.getKey());
                 treeMarkers.put(snapshot.getKey(), thisTreeMarker);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(nextTree));
             }
 
             @Override
