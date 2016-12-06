@@ -33,6 +33,8 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     private EditText editTextHeight;
     private EditText editTextLifespan;
     private EditText editTextDescription;
+    private EditText editTextLongitude;
+    private EditText editTextLatitude;
     private Button buttonSubmit;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authListener;
@@ -51,6 +53,8 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         editTextHeight = (EditText) view.findViewById(R.id.editTextHeight);
         editTextLifespan = (EditText) view.findViewById(R.id.editTextLifespan);
         editTextDescription = (EditText) view.findViewById(R.id.editTextDescription);
+        editTextLongitude = (EditText) view.findViewById(R.id.editTextLongitude);
+        editTextLatitude = (EditText) view.findViewById(R.id.editTextLatitude);
         buttonSubmit.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
         pd = new ProgressDialog(getActivity());
@@ -83,6 +87,8 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         String height = editTextHeight.getText().toString().trim();
         String lifespan = editTextLifespan.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
+        Float latitude = Float.parseFloat(editTextLatitude.getText().toString().trim());
+        Float longitude = Float.parseFloat(editTextLongitude.getText().toString().trim());
 
         //Creating Tree object
         TreeObject tree = new TreeObject();
@@ -95,8 +101,8 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         tree.setLifeSpan(lifespan);
         tree.setDescription(description);
 
-        tree.setLatitude(-50);
-        tree.setLongitude(-50);
+        tree.setLatitude(latitude);
+        tree.setLongitude(longitude);
 
         //Storing values to firebase
         //use of push generates unique key
