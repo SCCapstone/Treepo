@@ -3,6 +3,7 @@ package com.example.user.treepository;
 import android.*;
 import android.Manifest;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -57,6 +58,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity
 
     SupportMapFragment sMapFragment;
     private GoogleMap mMap;
+    private Intent gmapIntent;
 
     //hashmap associates database keys with tree markers
     private static HashMap<String, Marker> treeMarkers = new HashMap<String, Marker>();
