@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity
      */
     private GoogleApiClient client;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         if (sMapFragment.isAdded())
             sFm.beginTransaction().hide(sMapFragment).commit();
 
-        if (id == R.id.nav_tour) {
+        if (id == R.id.nav_map) {
             setTitle("Tree Map");
             if (!sMapFragment.isAdded())
                 sFm.beginTransaction().add(R.id.map, sMapFragment).commit();
@@ -155,6 +156,40 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_registration) {
             fm.beginTransaction().replace(R.id.content_frame, new RegistrationFragment()).commit();
             setTitle("Registration");
+        } else if (id == R.id.nav_tour) {
+            //        Uri gmmIntentUri = Uri.parse("google.navigation:q=33.987897,-81.024945&mode=w");
+            //This is the hardcoded Coordinates for a tree tour. Need to find a better way to integrate all of these in a map intent
+
+            Uri gmmIntentUri = Uri.parse("https://www.google.com/maps?daddr=33.987897,-81.024945+to:33.989619,-81.032797+to:33.99391,-81.029193");
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            if(mapIntent.resolveActivity(getPackageManager()) != null)
+                startActivity(mapIntent);
+            sFm.beginTransaction().show(sMapFragment).commit();
+            setTitle("Take the Tour");
+
+            //This is the old code to get the Latitude and Longitude for each individual tree, may be needed later.
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+//        DatabaseReference treeRef = ref.child(MainActivity.currentTreeKey);
+//        treeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                Float lat = Float.parseFloat(snapshot.child("latitude").getValue().toString());
+//                Float longitude = Float.parseFloat(snapshot.child("longitude").getValue().toString());
+//
+//                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?" + "daddr=" + lat + "," +longitude);
+////                Uri gmmIntentUri = Uri.parse(Locale.ENGLISH, "http://maps.google.com/maps?daddr= %f,%f", lat , longitude);
+//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+//                mapIntent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+//                startActivity(mapIntent);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError firebaseError) {
+//                System.out.println("The read failed: " + firebaseError.getMessage());
+//            }
+//        });
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

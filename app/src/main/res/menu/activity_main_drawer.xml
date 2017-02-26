@@ -3,21 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_tour" android:icon="@android:drawable/ic_menu_camera"
+        <item android:id="@+id/nav_map" 
             android:title="Tree Map" />
-        <item android:id="@+id/nav_contact" android:icon="@android:drawable/ic_menu_gallery"
+        <item android:title="Take the Tour"
+            android:id="@+id/nav_tour"/>
+        <item android:id="@+id/nav_contact"
             android:title="Contact Information" />
-        <item android:id="@+id/nav_login" android:icon="@android:drawable/ic_menu_slideshow"
+        <item android:id="@+id/nav_login"
             android:title="Login" />
         <item android:title="Add Tree "
-            android:id="@+id/nav_treeEdit"
-            android:icon="@android:drawable/ic_menu_slideshow" />
+            android:id="@+id/nav_treeEdit" />
         <item android:title="Last Visited Tree"
-            android:id="@+id/nav_treeInfo"
-            android:icon="@android:drawable/ic_menu_slideshow" />
+            android:id="@+id/nav_treeInfo" />
         <item android:title="Registration"
-            android:id="@+id/nav_registration"
-            android:icon="@android:drawable/ic_menu_slideshow" />
+            android:id="@+id/nav_registration" />
+
 
     </group>
 
