@@ -33,7 +33,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support'
+        exclude module: 'support-annotations'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
     })
 
 
@@ -42,13 +45,20 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.8.0'
     compile 'com.android.support:design:24.2.1'
     compile 'com.google.firebase:firebase-database:9.8.0'
-    compile 'com.google.firebase:firebase-core:9.0.1'
+    compile 'com.google.firebase:firebase-core:9.8.0'
     compile 'com.google.firebase:firebase-auth:9.8.0'
+    compile 'com.google.firebase:firebase-storage:9.8.0'
+    compile 'com.firebaseui:firebase-ui-storage:1.0.0'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.google.maps.android:android-maps-utils:0.5+'
     testCompile 'junit:junit:4.12'
     // Optional -- Mockito framework
 
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude group: 'com.android.support'
+        exclude module: 'support-annotations'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+    }
 }
 apply plugin: 'com.google.gms.google-services'

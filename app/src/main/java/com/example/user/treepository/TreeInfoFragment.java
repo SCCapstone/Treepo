@@ -10,18 +10,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+
+import com.bumptech.glide.Glide;
+
 import java.util.Locale;
 
 
@@ -31,6 +39,7 @@ import java.util.Locale;
 
 public class TreeInfoFragment extends Fragment implements View.OnClickListener {
     private TextView textViewTreeInfo;
+    private ImageView treeImageView;
     private Button buttonShare;
     View view;
     String treeName;
@@ -50,9 +59,28 @@ public class TreeInfoFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_treeinfo,container,false);
         buttonShare = (Button) view.findViewById(R.id.buttonShare);
         buttonShare.setOnClickListener(this);
+
         textViewTreeInfo = (TextView) view.findViewById(R.id.textViewTreeInfo);
+        treeImageView = (ImageView) view.findViewById(R.id.imageView2);
+
+        //create reference to tree database
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference treeRef = ref.child(MainActivity.currentTreeKey);
+
+        //create reference to tree image storage
+        StorageReference storage = FirebaseStorage.getInstance().getReference();
+        StorageReference treeImageRef = storage.child("tree_images/" + MainActivity.currentTreeKey + ".jpg");
+
+        //load tree image into image view
+        try {
+            Glide.with(this)
+                    .using(new FirebaseImageLoader())
+                    .load(treeImageRef)
+                    .into(treeImageView);
+        } catch (Exception e) {
+            //set picture to a default tree if download fails
+           treeImageView.setImageResource(R.drawable.tree);
+        }
 
         treeRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
