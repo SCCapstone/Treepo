@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity
 
         sMapFragment = SupportMapFragment.newInstance();
 
-        //setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -140,6 +139,10 @@ public class MainActivity extends AppCompatActivity
                 sFm.beginTransaction().add(R.id.map, sMapFragment).commit();
             else
                 sFm.beginTransaction().show(sMapFragment).commit();
+
+        } else if (id == R.id.searchbtn) {
+            Intent intent = new Intent(MainActivity.this, SearchResult.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_contact) {
             fm.beginTransaction().replace(R.id.content_frame, new ImportFragment()).commit();

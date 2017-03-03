@@ -17,6 +17,8 @@
             android:id="@+id/nav_treeInfo" />
         <item android:title="Registration"
             android:id="@+id/nav_registration" />
+        <item android:title="Search"
+            android:id="@+id/searchbtn" />
 
 
     </group>
