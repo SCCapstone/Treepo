@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity
                    OnMarkerClickListener {
 
     SupportMapFragment sMapFragment;
+
     private GoogleMap mMap;
     private Intent gmapIntent;
 
