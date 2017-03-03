@@ -8,6 +8,17 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageSelectionView"/>
+
+    <Button
+        android:text="Choose Picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonChooseImage" />
+
     <TextView
         android:text="Type"
         android:layout_width="match_parent"
