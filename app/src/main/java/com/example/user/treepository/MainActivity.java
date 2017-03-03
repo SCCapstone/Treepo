@@ -27,6 +27,7 @@ import android.location.Location;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //import com.firebase.client.Firebase;
 //import com.firebase.client.FirebaseError;
@@ -169,6 +170,9 @@ public class MainActivity extends AppCompatActivity
             mapIntent.setPackage("com.google.android.apps.maps");
             if(mapIntent.resolveActivity(getPackageManager()) != null)
                 startActivity(mapIntent);
+            else{
+                Toast.makeText(this,"Please download Google Maps to use this feature", Toast.LENGTH_SHORT).show();
+            }
             sFm.beginTransaction().show(sMapFragment).commit();
             setTitle("Take the Tour");
 
