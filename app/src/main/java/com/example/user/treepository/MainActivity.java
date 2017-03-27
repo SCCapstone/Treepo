@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         sMapFragment.getMapAsync(this);
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().add(R.id.map, sMapFragment).commit();
+        fm.beginTransaction().add(R.id.map, sMapFragment).addToBackStack("Drawer").commit();
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -121,7 +121,10 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            drawer.openDrawer(GravityCompat.START);
         }
+
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -133,33 +136,37 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (sMapFragment.isAdded())
-            sFm.beginTransaction().hide(sMapFragment).commit();
+            sFm.beginTransaction().hide(sMapFragment).addToBackStack("Map").commit();
 
         if (id == R.id.nav_map) {
             setTitle("Tree Map");
-            if (!sMapFragment.isAdded())
+            if (!sMapFragment.isAdded()) {
                 sFm.beginTransaction().add(R.id.map, sMapFragment).commit();
-            else
+                setTitle("Tree Map");
+            }
+            else {
                 sFm.beginTransaction().show(sMapFragment).commit();
+                setTitle("Tree Map");
+            }
 
         } else if (id == R.id.searchbtn) {
             Intent intent = new Intent(MainActivity.this, SearchResult.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_contact) {
-            fm.beginTransaction().replace(R.id.content_frame, new ImportFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_frame, new ImportFragment()).addToBackStack("Contact").commit();
             setTitle("Contact Information");
         } else if (id == R.id.nav_login) {
-            fm.beginTransaction().replace(R.id.content_frame, new LoginFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_frame, new LoginFragment()).addToBackStack("Login").commit();
             setTitle("Log In");
         } else if (id == R.id.nav_treeEdit) {
-            fm.beginTransaction().replace(R.id.content_frame, new TreeEditFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_frame, new TreeEditFragment()).addToBackStack("Edit").commit();
             setTitle("Tree Edit");
         } else if (id == R.id.nav_treeInfo) {
-            fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).addToBackStack("Info").commit();
             setTitle("Last Visited Tree");
         } else if (id == R.id.nav_registration) {
-            fm.beginTransaction().replace(R.id.content_frame, new RegistrationFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_frame, new RegistrationFragment()).addToBackStack("Registration").commit();
             setTitle("Registration");
         } else if (id == R.id.nav_tour) {
             //        Uri gmmIntentUri = Uri.parse("google.navigation:q=33.987897,-81.024945&mode=w");
@@ -173,7 +180,7 @@ public class MainActivity extends AppCompatActivity
             else{
                 Toast.makeText(this,"Please download Google Maps to use this feature", Toast.LENGTH_SHORT).show();
             }
-            sFm.beginTransaction().show(sMapFragment).commit();
+            sFm.beginTransaction().show(sMapFragment).addToBackStack("Map").commit();
             setTitle("Take the Tour");
 
             //This is the old code to get the Latitude and Longitude for each individual tree, may be needed later.
@@ -343,5 +350,11 @@ public class MainActivity extends AppCompatActivity
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.setTitle("Treasured Trees");
     }
 }

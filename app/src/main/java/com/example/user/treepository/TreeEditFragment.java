@@ -179,5 +179,11 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         if(authListener != null)
             auth.removeAuthStateListener(authListener);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Tree Edit");
+    }
 }
 

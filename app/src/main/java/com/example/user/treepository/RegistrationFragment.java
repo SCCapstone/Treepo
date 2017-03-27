@@ -101,4 +101,10 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         registerNewUser();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Registration");
+    }
 }

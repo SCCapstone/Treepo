@@ -115,5 +115,4 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
 }
