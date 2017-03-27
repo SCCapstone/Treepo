@@ -172,15 +172,15 @@ public class MainActivity extends AppCompatActivity
             //        Uri gmmIntentUri = Uri.parse("google.navigation:q=33.987897,-81.024945&mode=w");
             //This is the hardcoded Coordinates for a tree tour. Need to find a better way to integrate all of these in a map intent
 
-            Uri gmmIntentUri = Uri.parse("https://www.google.com/maps?daddr=33.987897,-81.024945+to:33.989619,-81.032797+to:33.99391,-81.029193");
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
-            if(mapIntent.resolveActivity(getPackageManager()) != null)
-                startActivity(mapIntent);
-            else{
-                Toast.makeText(this,"Please download Google Maps to use this feature", Toast.LENGTH_SHORT).show();
-            }
-            sFm.beginTransaction().show(sMapFragment).addToBackStack("Map").commit();
+//            Uri gmmIntentUri = Uri.parse("https://www.google.com/maps?daddr=33.987897,-81.024945+to:33.989619,-81.032797+to:33.99391,-81.029193");
+//            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+//            mapIntent.setPackage("com.google.android.apps.maps");
+//            if(mapIntent.resolveActivity(getPackageManager()) != null)
+//                startActivity(mapIntent);
+//            else{
+//                Toast.makeText(this,"Please download Google Maps to use this feature", Toast.LENGTH_SHORT).show();
+//            }
+            fm.beginTransaction().replace(R.id.content_frame, new TourFragment()).addToBackStack("Tour").commit();
             setTitle("Take the Tour");
 
             //This is the old code to get the Latitude and Longitude for each individual tree, may be needed later.
