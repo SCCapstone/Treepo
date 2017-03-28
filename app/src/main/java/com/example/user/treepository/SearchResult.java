@@ -27,30 +27,35 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 import java.util.ArrayList;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchResult extends AppCompatActivity implements View.OnClickListener {
-    private EditText editQuery;
-    private Button btnSearch;
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-    public String query;
-    private ArrayList<String> searchResults = new ArrayList<String>();
-    private ArrayList<String> tempResults = new ArrayList<String>();
+public class SearchResult extends AppCompatActivity {
+
+    private ListView myList;
     ArrayAdapter<String> adapter;
-    ListView list;
+    EditText input;
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    ArrayList<String> searchResults = new ArrayList<String>();
 
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
-        list = (ListView) findViewById(R.id.listview);
+        myList = (ListView) findViewById(R.id.listview);
+        input = (EditText) findViewById(R.id.editSearchText);
 
         database.addChildEventListener(new ChildEventListener() {
             @Override
@@ -79,40 +84,27 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        editQuery = (EditText) findViewById(R.id.editSearchText);
-        query = editQuery.getText().toString();
-        btnSearch = (Button) findViewById(R.id.btnSearch);
-        btnSearch.setOnClickListener(this);
-        // Inflate the layout for this fragment
-    }
+
+        adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.tree_location, searchResults);
+        myList.setAdapter(adapter);
 
 
-    @Override
-    public void onClick(View v) {
-        query = editQuery.getText().toString();
-        if(TextUtils.isEmpty(query)){
-            //Empty search
-            Toast.makeText(this,"Please enter an a search query", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        else{
-            tempResults.clear();
-            for(int i=0;i<searchResults.size();i++){
-                if(searchResults.get(i).toLowerCase().contains(query.toLowerCase())){
-                    tempResults.add(searchResults.get(i));
-                }
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                adapter.notifyDataSetChanged();
             }
-            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tempResults);
-//            Toast.makeText(this,searchResults.size(), Toast.LENGTH_SHORT).show();
 
-            list.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                SearchResult.this.adapter.getFilter().filter(s);
+            }
 
-        }
-    }
+            @Override
+            public void afterTextChanged(Editable s) {
 
-    private void searchDatabase() {
-
+            }
+        });
 
     }
 
