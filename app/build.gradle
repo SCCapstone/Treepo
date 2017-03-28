@@ -39,7 +39,15 @@ dependencies {
         exclude module: 'support-v4'
     })
 
+    // Optional -- Mockito framework
 
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude group: 'com.android.support'
+        exclude module: 'support-annotations'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+    }
+    //compile 'com.google.maps.android:android-maps-utils:0.5.+'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.google.android.gms:play-services-maps:9.8.0'
     compile 'com.google.android.gms:play-services:9.8.0'
@@ -50,15 +58,6 @@ dependencies {
     compile 'com.google.firebase:firebase-storage:9.8.0'
     compile 'com.firebaseui:firebase-ui-storage:1.0.0'
     compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.google.maps.android:android-maps-utils:0.5+'
     testCompile 'junit:junit:4.12'
-    // Optional -- Mockito framework
-
-    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.2') {
-        exclude group: 'com.android.support'
-        exclude module: 'support-annotations'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-    }
 }
 apply plugin: 'com.google.gms.google-services'

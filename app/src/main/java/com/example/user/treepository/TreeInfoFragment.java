@@ -178,8 +178,12 @@ public class TreeInfoFragment extends Fragment implements View.OnClickListener {
         return bmpUri;
     }
 
-
-        /*
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Last Visited Tree");
+    }
+/*
         Uri bmpUri=null;
         Drawable drawable = treeImageView.getDrawable();
         Bitmap bmp = null;

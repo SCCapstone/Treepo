@@ -137,4 +137,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         if(authListener != null)
             auth.removeAuthStateListener(authListener);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Login");
+    }
 }

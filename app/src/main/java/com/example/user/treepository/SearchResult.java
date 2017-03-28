@@ -107,5 +107,4 @@ public class SearchResult extends AppCompatActivity {
         });
 
     }
-
 }
