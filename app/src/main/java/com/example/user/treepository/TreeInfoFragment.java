@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ import java.util.Locale;
  * Created by brycebware on 11/24/16.
  */
 
-public class TreeInfoFragment extends Fragment implements View.OnClickListener {
+public class TreeInfoFragment extends AppCompatActivity implements View.OnClickListener {
     private TextView textViewTreeInfo;
     private ImageView treeImageView;
     private Button buttonShare;
@@ -61,16 +62,15 @@ public class TreeInfoFragment extends Fragment implements View.OnClickListener {
     String longitude;
 
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_treeinfo,container,false);
-        buttonShare = (Button) view.findViewById(R.id.buttonShare);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_treeinfo);
+        buttonShare = (Button) findViewById(R.id.buttonShare);
         buttonShare.setOnClickListener(this);
 
-        textViewTreeInfo = (TextView) view.findViewById(R.id.textViewTreeInfo);
-        treeImageView = (ImageView) view.findViewById(R.id.imageView2);
+        textViewTreeInfo = (TextView) findViewById(R.id.textViewTreeInfo);
+        treeImageView = (ImageView) findViewById(R.id.imageView2);
 
         //create reference to tree database
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -117,15 +117,12 @@ public class TreeInfoFragment extends Fragment implements View.OnClickListener {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-
-        return view;
-
     }
     public void onClick(View v) {
 
 
-        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
         // Get access to the URI for the bitmap
         Uri bmpUri = getLocalBitmapUri(treeImageView);
@@ -181,7 +178,7 @@ public class TreeInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle("Last Visited Tree");
+        this.setTitle("Detailed Tree Information");
     }
 /*
         Uri bmpUri=null;

@@ -36,6 +36,10 @@
             android:name=".SearchResult"
             android:parentActivityName=".MainActivity">
         </activity>
+        <activity
+            android:name=".TreeInfoFragment"
+            android:parentActivityName=".MainActivity">
+        </activity>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.

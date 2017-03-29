@@ -163,8 +163,9 @@ public class MainActivity extends AppCompatActivity
             fm.beginTransaction().replace(R.id.content_frame, new TreeEditFragment()).addToBackStack("Edit").commit();
             setTitle("Tree Edit");
         } else if (id == R.id.nav_treeInfo) {
-            fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).addToBackStack("Info").commit();
-            setTitle("Last Visited Tree");
+            Intent intent = new Intent(MainActivity.this, TreeInfoFragment.class);
+            startActivity(intent);
+            setTitle("Detailed Tree Information");
         } else if (id == R.id.nav_registration) {
             fm.beginTransaction().replace(R.id.content_frame, new RegistrationFragment()).addToBackStack("Registration").commit();
             setTitle("Registration");
@@ -268,16 +269,10 @@ public class MainActivity extends AppCompatActivity
         //set the key of the tree which was clicked
         currentTreeKey = clickedMarker.getTag().toString();
 
-        FragmentManager fm = getFragmentManager();
-        android.support.v4.app.FragmentManager sFm = getSupportFragmentManager();
 
-        //hide map from view
-        if (sMapFragment.isAdded())
-            sFm.beginTransaction().hide(sMapFragment).commit();
-
-        //switch to tree info fragment
-        fm.beginTransaction().replace(R.id.content_frame, new TreeInfoFragment()).commit();
-        setTitle("Tree Info");
+        Intent intent = new Intent(MainActivity.this, TreeInfoFragment.class);
+        startActivity(intent);
+        setTitle("Detailed Tree Information");
 
         return true;
     }
