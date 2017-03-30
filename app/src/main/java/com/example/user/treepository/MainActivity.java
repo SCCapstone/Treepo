@@ -35,6 +35,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DataSnapshot;
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleMap mMap;
     private Intent gmapIntent;
+    private FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth auth;
 
     //hashmap associates database keys with tree markers
     private static HashMap<String, Marker> treeMarkers = new HashMap<String, Marker>();
@@ -93,6 +97,7 @@ public class MainActivity extends AppCompatActivity
 
 
         sMapFragment = SupportMapFragment.newInstance();
+        auth = FirebaseAuth.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -102,8 +107,23 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (firebaseAuth.getCurrentUser() == null) {
+                    navigationView.getMenu().findItem(R.id.nav_registration).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_treeEdit).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
+                }
+                else
+                    navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
+            }
+        };
+
         sMapFragment.getMapAsync(this);
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().add(R.id.map, sMapFragment).addToBackStack("Drawer").commit();
@@ -172,6 +192,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_tour) {
             fm.beginTransaction().replace(R.id.content_frame, new TourFragment()).addToBackStack("Tour").commit();
             setTitle("Treasured Tours");
+        } else if (id == R.id.nav_logout) {
+            auth.signOut();
+            this.finish();
+            startActivity(new Intent(this, MainActivity.class));
+            Toast.makeText(this, "Logout successful", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -298,6 +323,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
+        auth.addAuthStateListener(authListener);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -308,6 +334,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
+        if(authListener != null)
+            auth.removeAuthStateListener(authListener);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.

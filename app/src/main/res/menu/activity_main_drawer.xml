@@ -19,7 +19,8 @@
             android:id="@+id/nav_registration" />
         <item android:id="@+id/nav_login"
             android:title="Login" />
-
+        <item android:id="@+id/nav_logout"
+            android:title="Logout" />
 
     </group>
 
