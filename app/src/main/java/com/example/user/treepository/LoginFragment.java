@@ -31,7 +31,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button btnLogin;
-    private Button btnLogout;
     private FirebaseAuth auth;
     private ProgressDialog pd;
     private FirebaseAuth.AuthStateListener authListener;
@@ -50,7 +49,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         editTextEmail = (EditText) view.findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) view.findViewById(R.id.editTextPassword);
         btnLogin = (Button) view.findViewById(R.id.btnLogin);
-        btnLogout = (Button) view.findViewById(R.id.btnLogout);
         auth = FirebaseAuth.getInstance();
         pd = new ProgressDialog(getActivity());
 
@@ -58,16 +56,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(firebaseAuth.getCurrentUser() != null){
-                    Toast.makeText(getActivity(), "You are logged in as " + user.getEmail(), Toast.LENGTH_SHORT).show();
-                }
-                else
-                    Toast.makeText(getActivity(), "You are not currently logged in", Toast.LENGTH_SHORT).show();
+//                if(firebaseAuth.getCurrentUser() != null){
+//                    Toast.makeText(getActivity(), "Log In Successful", Toast.LENGTH_SHORT).show();
+//                }
+//                else
+//                    Toast.makeText(getActivity(), "You are not currently logged in", Toast.LENGTH_SHORT).show();
             }
         };
 
         btnLogin.setOnClickListener(this);
-        btnLogout.setOnClickListener(this);
         // Inflate the layout for this fragment
         return view;
     }
@@ -91,35 +88,37 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         pd.setMessage("Signing In...");
         pd.show();
 
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        FirebaseUser user = auth.getCurrentUser();
-                        pd.dismiss();
-                        if(task.isSuccessful()){
-                            getActivity().finish();
-                            startActivity(new Intent(getActivity(), MainActivity.class));
-                            //Toast.makeText(getActivity(), "Welcome " + user.getEmail(), Toast.LENGTH_LONG).show();
-                        }else{
-                            Toast.makeText(getActivity(), "Login failed, please try again", Toast.LENGTH_LONG).show();
+            auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            pd.dismiss();
+                            if (task.isSuccessful()) {
+                                btnLogin.setText("Log Out");
+                                getActivity().finish();
+                                startActivity(new Intent(getActivity(), MainActivity.class));
+                                Toast.makeText(getActivity(), "Login Successful", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getActivity(), "Login failed, please try again", Toast.LENGTH_LONG).show();
+                            }
+
+
                         }
-
-
-                    }
-                });
+                    });
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btnLogin)
+        if(v.getId() == R.id.btnLogin && btnLogin.getText().toString() != "Log Out")
             logInUser();
-        else if(v.getId() == R.id.btnLogout)
+        else if(v.getId() == R.id.btnLogin && btnLogin.getText().toString() == "Log Out")
             logOutUser();
     }
 
     private void logOutUser() {
         auth.signOut();
+        btnLogin.setText("Log In");
         getActivity().finish();
         startActivity(new Intent(getActivity(), MainActivity.class));
         Toast.makeText(getActivity(), "Logout successful", Toast.LENGTH_SHORT).show();
@@ -141,6 +140,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle("Login");
+        FirebaseUser user = auth.getCurrentUser();
+        if (auth.getCurrentUser() == null) {
+            getActivity().setTitle("Log In");
+        }
+        else {
+            getActivity().setTitle(user.getEmail().toString());
+            btnLogin.setText("Log Out");
+        }
     }
 }

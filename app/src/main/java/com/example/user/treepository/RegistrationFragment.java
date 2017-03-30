@@ -35,6 +35,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     private ProgressDialog pd;
     private FirebaseAuth auth;
     private DatabaseReference database;
+    private FirebaseAuth.AuthStateListener authListener;
     View view;
 
 
@@ -50,6 +51,16 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         database = FirebaseDatabase.getInstance().getReference().child("Users");
 
         btnRegister.setOnClickListener(this);
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Toast.makeText(getActivity(), "Please log in to register new users", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
 
         // Inflate the layout for this fragment
         return view;
@@ -99,12 +110,28 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        registerNewUser();
+        if (auth.getCurrentUser() != null)
+            registerNewUser();
+        else
+            Toast.makeText(getActivity(), "You must log in to register a new user", Toast.LENGTH_LONG).show();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle("Registration");
+        getActivity().setTitle("Register New Users");
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(authListener != null)
+            auth.removeAuthStateListener(authListener);
     }
 }

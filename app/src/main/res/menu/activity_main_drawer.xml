@@ -5,20 +5,20 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_map" 
             android:title="Tree Map" />
-        <item android:title="Take the Tour"
+        <item android:title="Treasured Tours"
             android:id="@+id/nav_tour"/>
-        <item android:id="@+id/nav_contact"
-            android:title="Contact Information" />
-        <item android:id="@+id/nav_login"
-            android:title="Login" />
-        <item android:title="Add Tree "
-            android:id="@+id/nav_treeEdit" />
-        <item android:title="Last Visited Tree"
-            android:id="@+id/nav_treeInfo" />
-        <item android:title="Registration"
-            android:id="@+id/nav_registration" />
         <item android:title="Search"
             android:id="@+id/searchbtn" />
+        <item android:title="Last Visited Tree"
+            android:id="@+id/nav_treeInfo" />
+        <item android:id="@+id/nav_contact"
+            android:title="Contact Information" />
+        <item android:title="Add Tree "
+            android:id="@+id/nav_treeEdit" />
+        <item android:title="Register New User"
+            android:id="@+id/nav_registration" />
+        <item android:id="@+id/nav_login"
+            android:title="Login" />
 
 
     </group>

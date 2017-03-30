@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity
             setTitle("Log In");
         } else if (id == R.id.nav_treeEdit) {
             fm.beginTransaction().replace(R.id.content_frame, new TreeEditFragment()).addToBackStack("Edit").commit();
-            setTitle("Tree Edit");
+            setTitle("Add a Tree");
         } else if (id == R.id.nav_treeInfo) {
             Intent intent = new Intent(MainActivity.this, TreeInfoFragment.class);
             startActivity(intent);
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity
             setTitle("Registration");
         } else if (id == R.id.nav_tour) {
             fm.beginTransaction().replace(R.id.content_frame, new TourFragment()).addToBackStack("Tour").commit();
-            setTitle("Take the Tour");
+            setTitle("Treasured Tours");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -182,6 +182,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        LatLng Columbia = new LatLng(33.9968342,-81.0290422);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Columbia,12));
         //set up marker click listener
         mMap.setOnMarkerClickListener(this);
 

@@ -29,16 +29,8 @@
 
         <Button
             android:layout_margin="15dp"
-            android:text="Log in"
+            android:text="Log In"
             android:id="@+id/btnLogin"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:layout_margin="15dp"
-            android:text="Log out"
-            android:id="@+id/btnLogout"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
