@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,14 @@ import java.util.Locale;
  */
 
 public class TreeInfoFragment extends AppCompatActivity implements View.OnClickListener {
-    private TextView textViewTreeInfo;
+    private TextView textViewTreeName;
+    private TextView textViewTreeAddress;
+    private TextView textViewTreeAge;
+    private TextView textViewTreeHeight;
+    private TextView textViewTreeLifespan;
+    private TextView textViewTreeDescription;
+
+
     private ImageView treeImageView;
     private Button buttonShare;
     View view;
@@ -69,7 +77,13 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
         buttonShare = (Button) findViewById(R.id.buttonShare);
         buttonShare.setOnClickListener(this);
 
-        textViewTreeInfo = (TextView) findViewById(R.id.textViewTreeInfo);
+        textViewTreeName = (TextView) findViewById(R.id.textViewTreeName);
+        textViewTreeAddress = (TextView) findViewById(R.id.textViewTreeAddress);
+        textViewTreeAge = (TextView) findViewById(R.id.textViewTreeAge);
+        textViewTreeHeight = (TextView) findViewById(R.id.textViewTreeHeight);
+        textViewTreeLifespan = (TextView) findViewById(R.id.textViewTreeLifespan);
+        textViewTreeDescription = (TextView) findViewById(R.id.textViewTreeDescription);
+        //textViewTreeName = (TextView) findViewByID(R.id.textViewTreeName);
         treeImageView = (ImageView) findViewById(R.id.imageView2);
 
         //create reference to tree database
@@ -103,13 +117,22 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
                 lifeSpan = snapshot.child("lifeSpan").getValue().toString();
                 longitude = snapshot.child("longitude").getValue().toString();
                     //Adding it to a string
-                    String string = "Type: " + treeName + "\nAddress: " + address;
-                    string += "\nAge: " + age + "\nHeight: " + height;
-                    string += "\nExpected Lifespan: " + lifeSpan;
-                    string += "\nDescription: " + description + "\n\n";
+
+                String viewType = "<b>Type:</b> " + treeName;
+                String viewAddress = "<b>Location:</b> " + address;
+                String viewAge = "<b>Age:</b> " + age;
+                String viewHeight = "<b>Height:</b> " + height;
+                String viewLifespan = "<b>Expected Lifespan:</b> " + lifeSpan;
+                String viewDescription = "<b>Description:</b> " + description ;
 
                     //Displaying it on textview
-                    textViewTreeInfo.setText(string);
+                textViewTreeName.setText(Html.fromHtml(viewType));
+                textViewTreeAddress.setText(Html.fromHtml(viewAddress));
+                textViewTreeAge.setText(Html.fromHtml(viewAge));
+                textViewTreeHeight.setText(Html.fromHtml(viewHeight));
+                textViewTreeLifespan.setText(Html.fromHtml(viewLifespan));
+                textViewTreeDescription.setText(Html.fromHtml(viewDescription));
+
             }
 
             @Override
