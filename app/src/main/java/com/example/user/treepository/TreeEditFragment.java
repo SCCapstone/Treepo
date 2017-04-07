@@ -4,8 +4,10 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by brycebware on 11/23/16.
  */
@@ -44,12 +51,17 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     private EditText editTextLatitude;
     private Button buttonSubmit;
     private Button buttonChooseImage;
+    private Button buttonTakePicture;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authListener;
     private ProgressDialog pd;
     private Uri pathToImage;
+    private String pathToImageString;
     private ImageView imageSelectionView;
     View view;
+
+    static final int REQUEST_CHOOSE_IMAGE = 234;
+    static final int REQUEST_IMAGE_CAPTURE = 567;
 
     @Nullable
     @Override
@@ -58,6 +70,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         view = inflater.inflate(R.layout.tree_edit,container,false);
         buttonSubmit = (Button) view.findViewById(R.id.buttonSubmit);
         buttonChooseImage = (Button) view.findViewById(R.id.buttonChooseImage);
+        buttonTakePicture = (Button) view.findViewById(R.id.buttonTakePicture);
         editTextType = (EditText) view.findViewById(R.id.editTextType);
         editTextAddress = (EditText) view.findViewById(R.id.editTextAddress);
         editTextAge = (EditText) view.findViewById(R.id.editTextAge);
@@ -69,6 +82,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         imageSelectionView = (ImageView) view.findViewById(R.id.imageSelectionView);
         buttonSubmit.setOnClickListener(this);
         buttonChooseImage.setOnClickListener(this);
+        buttonTakePicture.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
         pd = new ProgressDialog(getActivity());
 
@@ -91,10 +105,33 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
 
         if (v == buttonChooseImage) {
             //open a picture selector on the device
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 234);
+            Intent choosePictureIntent = new Intent();
+            choosePictureIntent.setType("image/*");
+            choosePictureIntent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(choosePictureIntent, "Select Picture"), REQUEST_CHOOSE_IMAGE);
+
+        } else if (v == buttonTakePicture) {
+            //open the camera and take picture
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                //create file to receive the photo
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                if (photoFile != null) {
+                    Uri photoUri = FileProvider.getUriForFile(getActivity(),
+                            "com.example.user.treepository.FileProvider", photoFile);
+                    //pathToImage = photoUri;
+                    //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+
+
 
         } else if (v == buttonSubmit) {
 
@@ -136,7 +173,9 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
                 newRef.setValue(tree);
                 //add the image to firebase storage
                 String newKey = newRef.getKey();
-                storageRef.child("tree_images/" + newKey + ".jpg").putFile(pathToImage);
+                if (pathToImage != null) {
+                    storageRef.child("tree_images/" + newKey + ".jpg").putFile(pathToImage);
+                }
 
                 startActivity(new Intent(getActivity(), MainActivity.class));
                 Toast.makeText(getActivity(), "New tree added!", Toast.LENGTH_SHORT).show();
@@ -155,7 +194,8 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 234 && resultCode == android.app.Activity.RESULT_OK &&
+        //code to handle choosing existing picture
+        if (requestCode == REQUEST_CHOOSE_IMAGE && resultCode == android.app.Activity.RESULT_OK &&
                 data != null && data.getData() != null) {
             pathToImage = data.getData();
             try {
@@ -164,7 +204,28 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+        //code to handle new photo from camera
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == android.app.Activity.RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageSelectionView.setImageBitmap(imageBitmap);
         }
+    }
+
+    //method creates a file to store an image taken by the user
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        pathToImageString = image.getAbsolutePath();
+        return image;
     }
 
     @Override

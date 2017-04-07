@@ -14,10 +14,16 @@
         android:id="@+id/imageSelectionView"/>
 
     <Button
-        android:text="Choose Picture"
+        android:text="Choose Existing Picture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonChooseImage" />
+
+    <Button
+        android:text="Take New Picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonTakePicture" />
 
     <TextView
         android:text="Type"
