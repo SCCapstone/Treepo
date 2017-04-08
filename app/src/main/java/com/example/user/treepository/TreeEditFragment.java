@@ -135,6 +135,8 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
 
         } else if (v == buttonSubmit) {
 
+            Float latitude = (float)0;
+            Float longitude = (float)0;
             //Creating firebase object
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -146,8 +148,21 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
             String height = editTextHeight.getText().toString().trim();
             String lifespan = editTextLifespan.getText().toString().trim();
             String description = editTextDescription.getText().toString().trim();
-            Float latitude = Float.parseFloat(editTextLatitude.getText().toString().trim());
-            Float longitude = Float.parseFloat(editTextLongitude.getText().toString().trim());
+            try {
+                latitude = Float.parseFloat(editTextLatitude.getText().toString().trim());
+            }
+            catch (Exception e){
+                latitude = (float)0;
+
+            }
+            try {
+                longitude = Float.parseFloat(editTextLongitude.getText().toString().trim());
+            }
+            catch (Exception e){
+                longitude = (float)0;
+            }
+
+
 
             //Creating Tree object
             TreeObject tree = new TreeObject();
@@ -160,12 +175,16 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
             tree.setLifeSpan(lifespan);
             tree.setDescription(description);
 
+
             tree.setLatitude(latitude);
+
+
             tree.setLongitude(longitude);
+
 
             //Storing values to firebase
             //use of push generates unique key
-            if (auth.getCurrentUser() != null) {
+            if (auth.getCurrentUser() != null && latitude != 0 && longitude != 0) {
 
                 //create a new key and location for the new tree
                 DatabaseReference newRef = rootRef.push();
@@ -179,7 +198,11 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
 
                 startActivity(new Intent(getActivity(), MainActivity.class));
                 Toast.makeText(getActivity(), "New tree added!", Toast.LENGTH_SHORT).show();
-            } else {
+            }
+            else if (latitude == 0 || longitude == 0){
+                Toast.makeText(getActivity(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
+            }
+            else {
                 Toast.makeText(getActivity(), "You must log in to add a tree", Toast.LENGTH_SHORT).show();
             }
 
