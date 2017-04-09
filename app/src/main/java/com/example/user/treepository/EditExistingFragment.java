@@ -147,6 +147,7 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
 
             //open the camera and take picture
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
             if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
                 //create file to receive the photo
                 File photoFile = null;
@@ -157,10 +158,10 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
                 }
 
                 if (photoFile != null) {
-                    Uri photoUri = FileProvider.getUriForFile(this,
+                    /*Uri photoUri = FileProvider.getUriForFile(this,
                             "com.example.user.treepository.FileProvider", photoFile);
                     //pathToImage = photoUri;
-                    //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);*/
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
