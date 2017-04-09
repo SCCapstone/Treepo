@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +28,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DataSnapshot;
@@ -59,6 +63,9 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
 
     private ImageView treeImageView;
     private Button buttonShare;
+    private Button buttonEditExisting;
+    private Button buttonDeleteTree;
+
     View view;
     String treeName;
     String address;
@@ -69,13 +76,18 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
     String lifeSpan;
     String longitude;
 
-
+    private FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth auth;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_treeinfo);
         buttonShare = (Button) findViewById(R.id.buttonShare);
         buttonShare.setOnClickListener(this);
+        buttonEditExisting = (Button) findViewById(R.id.buttonEditExisting);
+        buttonEditExisting.setOnClickListener(this);
+        buttonDeleteTree = (Button) findViewById(R.id.buttonDeleteTree);
+        buttonDeleteTree.setOnClickListener(this);
 
         textViewTreeName = (TextView) findViewById(R.id.textViewTreeName);
         textViewTreeAddress = (TextView) findViewById(R.id.textViewTreeAddress);
@@ -85,6 +97,17 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
         textViewTreeDescription = (TextView) findViewById(R.id.textViewTreeDescription);
         //textViewTreeName = (TextView) findViewByID(R.id.textViewTreeName);
         treeImageView = (ImageView) findViewById(R.id.imageView2);
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (firebaseAuth.getCurrentUser() == null) {
+                    buttonEditExisting.setVisibility(View.GONE);
+                    buttonDeleteTree.setVisibility(View.GONE);
+                }
+            }
+        };
 
         //create reference to tree database
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -144,34 +167,50 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
 
 
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        if (v == buttonShare) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
-        // Get access to the URI for the bitmap
-        Uri bmpUri = getLocalBitmapUri(treeImageView);
-        if (bmpUri != null) {
-            // Construct a ShareIntent with link to image
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            String shareBody = "Check out this " + treeName + " tree at " + address + ". Download the" +
-                " Treasured Trees App to find more trees near you! #TreasuredTrees";
-            shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "#TreasuredTrees");
-            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
-            shareIntent.setType("image/*");
-            // Launch sharing dialog for image
-            startActivity(Intent.createChooser(shareIntent, "Share Via"));
+            // Get access to the URI for the bitmap
+            Uri bmpUri = getLocalBitmapUri(treeImageView);
+            if (bmpUri != null) {
+                // Construct a ShareIntent with link to image
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                String shareBody = "Check out this " + treeName + " tree at " + address + ". Download the" +
+                    " Treasured Trees App to find more trees near you! #TreasuredTrees";
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "#TreasuredTrees");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+                shareIntent.setType("image/*");
+                // Launch sharing dialog for image
+                startActivity(Intent.createChooser(shareIntent, "Share Via"));
 
-        } else {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            String shareBody = "Check out this " + treeName + " tree at " + address + ".\nDownload the" +
-                    " Treasured Trees App to find more trees near you!";
-            shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "#TreasuredTrees");
-            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-            shareIntent.setType("text/plain");
-            // Launch sharing dialog for image
-            startActivity(Intent.createChooser(shareIntent, "Share Via"));
+            } else {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                String shareBody = "Check out this " + treeName + " tree at " + address + ".\nDownload the" +
+                        " Treasured Trees App to find more trees near you!";
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "#TreasuredTrees");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                shareIntent.setType("text/plain");
+                // Launch sharing dialog for image
+                startActivity(Intent.createChooser(shareIntent, "Share Via"));
+            }
+        } else if (v == buttonEditExisting) {
+
+            Intent intent = new Intent(TreeInfoFragment.this, EditExistingFragment.class);
+            startActivity(intent);
+            setTitle("Detailed Tree Information");
+
+        } else if (v == buttonDeleteTree) {
+            //obtain reference to current tree
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference treeRef = ref.child(MainActivity.currentTreeKey);
+
+            //remove from database
+            treeRef.removeValue();
+            Toast.makeText(this, "Tree Has Been Deleted", Toast.LENGTH_SHORT).show();
         }
     }
 
