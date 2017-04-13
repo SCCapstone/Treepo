@@ -4,7 +4,6 @@
         <item>Address</item>
         <item>Age</item>
         <item>Height</item>
-        <item>LifeSpan</item>
         <item>Type</item>
     </string-array>
 </resources>

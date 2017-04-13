@@ -8,21 +8,38 @@
 
 
     <EditText
-        android:hint="Search by Address"
+        android:hint="Search"
             android:gravity="center_horizontal"
             android:id="@+id/editSearchText"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
         android:layout_marginTop="14dp"
         android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/search_spinner"
         />
+
+    <Spinner
+        android:id="@+id/search_spinner"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="fill_parent"
+        android:text="Search"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/search_spinner" />
 
         <ListView
             android:id="@+id/listview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center|bottom"
-            android:layout_below="@+id/editSearchText"
+            android:layout_below="@+id/search_button"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             />

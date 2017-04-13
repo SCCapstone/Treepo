@@ -1,6 +1,7 @@
 package com.example.user.treepository;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -31,39 +33,92 @@ import android.widget.Toast;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchResult extends AppCompatActivity {
-
+public class SearchResult extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private ListView myList;
+    private ArrayList<ArrayList<String>> databaseArray;
     ArrayAdapter<String> adapter;
-    EditText input;
+    private EditText input;
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-    ArrayList<String> searchResults = new ArrayList<String>();
-    private HashMap<String, String> treeMarkers = new HashMap<String, String>();
+    ArrayList<String> searchResults;
+    private String currentSpinnerSelection = "address";
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
+        searchResults = new ArrayList<String>();
+        databaseArray = new ArrayList<ArrayList<String>>();
+        input = (EditText) findViewById(R.id.editSearchText);
         setTitle("Search Menu");
+        Spinner spinner = (Spinner) findViewById(R.id.search_spinner);
+        ArrayAdapter<CharSequence> spinner_adapter = ArrayAdapter.createFromResource(this,R.array.spinner_options, android.R.layout.simple_spinner_item);
+        spinner.setAdapter(spinner_adapter);
+        spinner.setOnItemSelectedListener(this);
+        Button button = (Button) findViewById(R.id.search_button);
+        button.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                searchResults.clear();
+                if(currentSpinnerSelection.equals("address")){
+                    for(int i = 0; i < databaseArray.size(); i++){
+                        if(databaseArray.get(i).get(1).toLowerCase().contains(input.getText().toString())){
+                            searchResults.add(databaseArray.get(i).get(1));
+                        }
+                    }
+                }
+                else if(currentSpinnerSelection.equals("age")){
+                    for(int i = 0; i < databaseArray.size(); i++){
+                        if(databaseArray.get(i).get(2).toLowerCase().contains(input.getText().toString())){
+                            searchResults.add(databaseArray.get(i).get(1));
+                        }
+                    }
+                }
+                else if(currentSpinnerSelection.equals("height")){
+                    for(int i = 0; i < databaseArray.size(); i++){
+                        if(databaseArray.get(i).get(3).toLowerCase().contains(input.getText().toString())){
+                            searchResults.add(databaseArray.get(i).get(1));
+                        }
+                    }
+                }
+                else if(currentSpinnerSelection.equals("type")){
+                    for(int i = 0; i < databaseArray.size(); i++){
+                        if(databaseArray.get(i).get(4).toLowerCase().contains(input.getText().toString())){
+                            searchResults.add(databaseArray.get(i).get(1));
+                        }
+                    }
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+        });
         myList = (ListView) findViewById(R.id.listview);
         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getAdapter().getItem(position).toString();
-                MainActivity.currentTreeKey = treeMarkers.get(selectedItem);
+                for(int i = 0; i < databaseArray.size(); i++){
+                    if(databaseArray.get(i).get(1).equals(selectedItem)){
+                        MainActivity.currentTreeKey = databaseArray.get(i).get(0);
+                        break;
+                    }
+                }
                 Intent intent = new Intent(SearchResult.this, TreeInfoFragment.class);
                 startActivity(intent);
             }
         });
 
 
-        input = (EditText) findViewById(R.id.editSearchText);
+
 
         database.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ArrayList<String> tempArray = new ArrayList<String>();
+                tempArray.add(dataSnapshot.getKey().toString());
+                tempArray.add(dataSnapshot.child("address").getValue().toString());
+                tempArray.add(dataSnapshot.child("age").getValue().toString());
+                tempArray.add(dataSnapshot.child("height").getValue().toString());
+                tempArray.add(dataSnapshot.child("type").getValue().toString());
                 String address = dataSnapshot.child("address").getValue().toString();
-                treeMarkers.put(address, dataSnapshot.getKey());
-                searchResults.add(address);
+                databaseArray.add(tempArray);
             }
 
             @Override
@@ -86,28 +141,19 @@ public class SearchResult extends AppCompatActivity {
 
             }
         });
-
         adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.tree_location, searchResults);
         myList.setAdapter(adapter);
 
 
-        input.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                SearchResult.this.adapter.getFilter().filter(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        currentSpinnerSelection = parent.getItemAtPosition(position).toString().toLowerCase();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
