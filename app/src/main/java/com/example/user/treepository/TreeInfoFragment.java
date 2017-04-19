@@ -170,9 +170,13 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
         if (v == buttonShare) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-
+            Uri bmpUri;
             // Get access to the URI for the bitmap
-            Uri bmpUri = getLocalBitmapUri(treeImageView);
+            try {
+                bmpUri = getLocalBitmapUri(treeImageView);
+            } catch (NullPointerException e) {
+                bmpUri = null;
+            }
             if (bmpUri != null) {
                 // Construct a ShareIntent with link to image
                 Intent shareIntent = new Intent();
@@ -217,10 +221,18 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
     // Returns the URI path to the Bitmap displayed in specified ImageView
     public Uri getLocalBitmapUri(ImageView imageView) {
         // Extract Bitmap from ImageView drawable
-        Drawable drawable = imageView.getDrawable();
-
-        Bitmap bmp = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
-
+        Drawable drawable;
+        try {
+            drawable = imageView.getDrawable();
+        } catch (NullPointerException e) {
+            drawable = null;
+        }
+        Bitmap bmp;
+        try {
+            bmp = ((GlideBitmapDrawable) imageView.getDrawable()).getBitmap();
+        } catch (NullPointerException e) {
+            bmp = null;
+        }
         // Store image to default external storage directory
         Uri bmpUri = null;
         try {
