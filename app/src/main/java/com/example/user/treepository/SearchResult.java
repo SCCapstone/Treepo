@@ -8,6 +8,8 @@ import android.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -56,6 +58,8 @@ public class SearchResult extends AppCompatActivity implements AdapterView.OnIte
         Button button = (Button) findViewById(R.id.search_button);
         button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                 searchResults.clear();
                 if(currentSpinnerSelection.equals("address")){
                     for(int i = 0; i < databaseArray.size(); i++){
@@ -123,12 +127,31 @@ public class SearchResult extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                for(int i = 0;i < databaseArray.size(); i++){
+                    if(dataSnapshot.getKey().toString().equals(databaseArray.get(i).get(0))){
+                        databaseArray.remove(i);
+                        break;
+                    }
+                }
 
+                ArrayList<String> tempArray = new ArrayList<String>();
+                tempArray.add(dataSnapshot.getKey().toString());
+                tempArray.add(dataSnapshot.child("address").getValue().toString());
+                tempArray.add(dataSnapshot.child("age").getValue().toString());
+                tempArray.add(dataSnapshot.child("height").getValue().toString());
+                tempArray.add(dataSnapshot.child("type").getValue().toString());
+                String address = dataSnapshot.child("address").getValue().toString();
+                databaseArray.add(tempArray);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                for(int i = 0;i < databaseArray.size(); i++){
+                    if(dataSnapshot.getKey().toString().equals(databaseArray.get(i).get(0))){
+                        databaseArray.remove(i);
+                        break;
+                    }
+                }
             }
 
             @Override
