@@ -92,7 +92,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (firebaseAuth.getCurrentUser() == null) {
+                if (user == null) {
                     Toast.makeText(getActivity(), "Please log in to add a tree", Toast.LENGTH_SHORT).show();
                 }
             }

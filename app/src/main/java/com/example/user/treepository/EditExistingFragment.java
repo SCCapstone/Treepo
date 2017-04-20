@@ -209,7 +209,7 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
                 if (pathToImage != null && imageChanged == true) {
                     storageRef.child("tree_images/" + newKey + ".jpg").putFile(pathToImage);
                 }
-
+                startActivity(new Intent(this, TreeInfoFragment.class));
                 Toast.makeText(this, "Changes Submitted", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "You must log in to edit this tree", Toast.LENGTH_SHORT).show();

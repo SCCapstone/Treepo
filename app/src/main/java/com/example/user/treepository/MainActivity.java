@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng Columbia = new LatLng(33.9968342,-81.0290422);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Columbia,12));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Columbia,14));
         //set up marker click listener
         mMap.setOnMarkerClickListener(this);
 
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity
                 //associate database key with new marker
                 thisTreeMarker.setTag(snapshot.getKey());
                 treeMarkers.put(snapshot.getKey(), thisTreeMarker);
-                //mMap.animateCamera(CameraUpdateFactory.newLatLng(nextTree));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(nextTree,14));
             }
 
             @Override
