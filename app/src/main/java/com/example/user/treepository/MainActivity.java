@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (firebaseAuth.getCurrentUser() == null) {
+                if (user == null) {
                     navigationView.getMenu().findItem(R.id.nav_registration).setVisible(false);
                     navigationView.getMenu().findItem(R.id.nav_treeEdit).setVisible(false);
                     navigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);

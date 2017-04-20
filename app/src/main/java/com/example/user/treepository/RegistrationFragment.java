@@ -56,7 +56,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (firebaseAuth.getCurrentUser() == null) {
+                if (user == null) {
                     Toast.makeText(getActivity(), "Please log in to register new users", Toast.LENGTH_LONG).show();
                 }
             }

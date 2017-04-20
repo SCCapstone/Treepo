@@ -98,11 +98,13 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
         //textViewTreeName = (TextView) findViewByID(R.id.textViewTreeName);
         treeImageView = (ImageView) findViewById(R.id.imageView2);
 
+        auth = FirebaseAuth.getInstance();
+
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (firebaseAuth.getCurrentUser() == null) {
+                if (user == null) {
                     buttonEditExisting.setVisibility(View.GONE);
                     buttonDeleteTree.setVisibility(View.GONE);
                 }
@@ -253,6 +255,18 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
     public void onResume() {
         super.onResume();
         this.setTitle("Detailed Tree Information");
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(authListener != null)
+            auth.removeAuthStateListener(authListener);
     }
 /*
         Uri bmpUri=null;
