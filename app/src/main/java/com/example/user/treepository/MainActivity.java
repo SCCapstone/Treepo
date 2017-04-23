@@ -276,8 +276,6 @@ public class MainActivity extends AppCompatActivity
                 //thisTreeMarker.remove();
                 treeMarkers.remove(snapshot.getKey());
 
-                //remove marker for deleted tree from map
-
             }
 
             @Override

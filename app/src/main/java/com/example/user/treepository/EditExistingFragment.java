@@ -23,6 +23,7 @@ import android.provider.MediaStore;
 import android.graphics.Bitmap;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
@@ -103,6 +104,8 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
             Glide.with(this)
                     .using(new FirebaseImageLoader())
                     .load(treeImageRef)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .into(imageSelectionView);
         } catch (Exception e) {
             //set picture to a default tree if download fails
@@ -159,9 +162,9 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
 
                 if (photoFile != null) {
                     /*Uri photoUri = FileProvider.getUriForFile(this,
-                            "com.example.user.treepository.FileProvider", photoFile);
-                    //pathToImage = photoUri;
-                    //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);*/
+                            "com.example.user.treepository.fileprovider", photoFile);
+                    pathToImage = photoUri;
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);*/
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
@@ -203,11 +206,10 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
                 DatabaseReference myRef = rootRef.child(MainActivity.currentTreeKey);
                 //read information into the database
                 myRef.setValue(tree);
-                //add the image to firebase storage
-                String newKey = myRef.getKey();
 
+                //add the image to firebase storage
                 if (pathToImage != null && imageChanged == true) {
-                    storageRef.child("tree_images/" + newKey + ".jpg").putFile(pathToImage);
+                    storageRef.child("tree_images/" + MainActivity.currentTreeKey + ".jpg").putFile(pathToImage);
                 }
                 startActivity(new Intent(this, TreeInfoFragment.class));
                 Toast.makeText(this, "Changes Submitted", Toast.LENGTH_SHORT).show();
@@ -243,6 +245,7 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageSelectionView.setImageBitmap(imageBitmap);
         }
+
     }
 
     //method creates a file to store an image taken by the user

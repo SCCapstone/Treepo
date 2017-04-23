@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -118,12 +119,15 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
         //create reference to tree image storage
         StorageReference storage = FirebaseStorage.getInstance().getReference();
         StorageReference treeImageRef = storage.child("tree_images/" + MainActivity.currentTreeKey + ".jpg");
+        Toast.makeText(getBaseContext(), MainActivity.currentTreeKey, Toast.LENGTH_SHORT).show();
 
         //load tree image into image view
         try {
             Glide.with(this)
                     .using(new FirebaseImageLoader())
                     .load(treeImageRef)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .into(treeImageView);
         } catch (Exception e) {
             //set picture to a default tree if download fails
