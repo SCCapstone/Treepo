@@ -273,10 +273,11 @@ public class MainActivity extends AppCompatActivity
 
                 //get marker associated with this tree
                 Marker thisTreeMarker = treeMarkers.get(snapshot.getKey());
+                //thisTreeMarker.remove();
                 treeMarkers.remove(snapshot.getKey());
 
                 //remove marker for deleted tree from map
-                thisTreeMarker.remove();
+
             }
 
             @Override
