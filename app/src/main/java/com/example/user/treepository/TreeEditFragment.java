@@ -31,6 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -58,6 +59,9 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     private Uri pathToImage;
     private String pathToImageString;
     private ImageView imageSelectionView;
+    private byte[] imageData;
+    private boolean imageAdded;
+    private boolean imageAddedFromCamera;
     View view;
 
     static final int REQUEST_CHOOSE_IMAGE = 234;
@@ -104,6 +108,9 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
 
         if (v == buttonChooseImage) {
+            //mark image added as true
+            imageAdded = true;
+
             //open a picture selector on the device
             Intent choosePictureIntent = new Intent();
             choosePictureIntent.setType("image/*");
@@ -111,6 +118,9 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
             startActivityForResult(Intent.createChooser(choosePictureIntent, "Select Picture"), REQUEST_CHOOSE_IMAGE);
 
         } else if (v == buttonTakePicture) {
+            //mark that picture was taken
+            imageAddedFromCamera = true;
+
             //open the camera and take picture
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -123,10 +133,9 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
                 }
 
                 if (photoFile != null) {
-                    /*Uri photoUri = FileProvider.getUriForFile(getActivity(),
-                            "com.example.user.treepository.FileProvider", photoFile);
+                    Uri photoUri = Uri.fromFile(photoFile);
                     pathToImage = photoUri;
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);*/
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
@@ -192,8 +201,10 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
                 newRef.setValue(tree);
                 //add the image to firebase storage
                 String newKey = newRef.getKey();
-                if (pathToImage != null) {
+                if (pathToImage != null && imageAdded == true) {
                     storageRef.child("tree_images/" + newKey + ".jpg").putFile(pathToImage);
+                } else if (imageData != null && imageAddedFromCamera == true) {
+                    storageRef.child("tree_images/" + newKey + ".jpg").putBytes(imageData);
                 }
 
                 startActivity(new Intent(getActivity(), MainActivity.class));
@@ -233,6 +244,11 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageSelectionView.setImageBitmap(imageBitmap);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            this.imageData = baos.toByteArray();
+
         }
     }
 

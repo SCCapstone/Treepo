@@ -36,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -61,12 +62,14 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
     private Uri pathToImage;
     private String pathToImageString;
     private ImageView imageSelectionView;
+    private byte[] imageData;
     View view;
 
     static final int REQUEST_CHOOSE_IMAGE = 234;
     static final int REQUEST_IMAGE_CAPTURE = 567;
 
     private boolean imageChanged = false;
+    private boolean imageChangedFromCamera = false;
 
     @Nullable
     @Override
@@ -146,7 +149,7 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
 
         } else if (v == buttonTakePicture) {
             //mark that image has been changed
-            imageChanged = true;
+            imageChangedFromCamera = true;
 
             //open the camera and take picture
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -161,10 +164,8 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
                 }
 
                 if (photoFile != null) {
-                    /*Uri photoUri = FileProvider.getUriForFile(this,
-                            "com.example.user.treepository.fileprovider", photoFile);
+                    Uri photoUri = Uri.fromFile(photoFile);
                     pathToImage = photoUri;
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);*/
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
@@ -210,6 +211,8 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
                 //add the image to firebase storage
                 if (pathToImage != null && imageChanged == true) {
                     storageRef.child("tree_images/" + MainActivity.currentTreeKey + ".jpg").putFile(pathToImage);
+                } else if (imageData != null && imageChangedFromCamera == true) {
+                    storageRef.child("tree_images/" + MainActivity.currentTreeKey + ".jpg").putBytes(imageData);
                 }
                 startActivity(new Intent(this, TreeInfoFragment.class));
                 Toast.makeText(this, "Changes Submitted", Toast.LENGTH_SHORT).show();
@@ -217,10 +220,6 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
                 Toast.makeText(this, "You must log in to edit this tree", Toast.LENGTH_SHORT).show();
             }
 
-
-            //We need a notification that indicates a successful database write, can't figure
-            //out how to check that yet before displaying this toast.
-            //Toast.makeText(getActivity(),"Tree data written successfully", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -244,6 +243,10 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageSelectionView.setImageBitmap(imageBitmap);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            this.imageData = baos.toByteArray();
         }
 
     }
@@ -252,12 +255,8 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,
-                ".jpg",
-                storageDir
-        );
+        File storageDir = Environment.getExternalStorageDirectory();
+        File image = new File(storageDir, "imageFileName" + ".jpg");
 
         pathToImageString = image.getAbsolutePath();
         return image;
