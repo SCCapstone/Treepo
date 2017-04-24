@@ -135,7 +135,6 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
                 if (photoFile != null) {
                     Uri photoUri = Uri.fromFile(photoFile);
                     pathToImage = photoUri;
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
