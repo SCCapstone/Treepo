@@ -39,6 +39,7 @@ import java.util.Date;
 
 /**
  * Created by brycebware on 11/23/16.
+ * class to add a new tree
  */
 
 public class TreeEditFragment extends Fragment implements OnClickListener {
@@ -90,8 +91,7 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
         auth = FirebaseAuth.getInstance();
         pd = new ProgressDialog(getActivity());
 
-
-
+        //check if a user is logged in
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -135,11 +135,10 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
                 if (photoFile != null) {
                     Uri photoUri = Uri.fromFile(photoFile);
                     pathToImage = photoUri;
+                    //initiate camera
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
-
-
 
         } else if (v == buttonSubmit) {
 
@@ -161,7 +160,6 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
             }
             catch (Exception e){
                 latitude = (float)0;
-
             }
             try {
                 longitude = Float.parseFloat(editTextLongitude.getText().toString().trim());
@@ -169,8 +167,6 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
             catch (Exception e){
                 longitude = (float)0;
             }
-
-
 
             //Creating Tree object
             TreeObject tree = new TreeObject();
@@ -183,12 +179,8 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
             tree.setLifeSpan(lifespan);
             tree.setDescription(description);
 
-
             tree.setLatitude(latitude);
-
-
             tree.setLongitude(longitude);
-
 
             //Storing values to firebase
             //use of push generates unique key
@@ -262,7 +254,6 @@ public class TreeEditFragment extends Fragment implements OnClickListener {
                 storageDir
         );
 
-        pathToImageString = image.getAbsolutePath();
         return image;
     }
 

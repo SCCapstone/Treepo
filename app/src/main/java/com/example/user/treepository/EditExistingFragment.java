@@ -44,6 +44,7 @@ import java.util.Date;
 
 /**
  * Created by brycebware on 11/23/16.
+ * class containing activity to edit existing trees
  */
 
 public class EditExistingFragment extends AppCompatActivity implements View.OnClickListener {
@@ -166,6 +167,7 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
                 if (photoFile != null) {
                     Uri photoUri = Uri.fromFile(photoFile);
                     pathToImage = photoUri;
+                    //initiate camera
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             }
@@ -232,6 +234,7 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
                 data != null && data.getData() != null) {
             pathToImage = data.getData();
             try {
+                Toast.makeText(getBaseContext(), "updating image view", Toast.LENGTH_LONG).show();
                 imageSelectionView.setImageURI(null);
                 imageSelectionView.setImageURI(pathToImage);
             } catch (Exception e) {
@@ -240,10 +243,12 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
 
             //code to handle new photo from camera
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == android.app.Activity.RESULT_OK) {
+            //display image on page
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageSelectionView.setImageBitmap(imageBitmap);
 
+            //convet bitmap to byte array for reading into firebase
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             this.imageData = baos.toByteArray();
@@ -253,6 +258,7 @@ public class EditExistingFragment extends AppCompatActivity implements View.OnCl
 
     //method creates a file to store an image taken by the user
     private File createImageFile() throws IOException {
+        //create unique file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStorageDirectory();
