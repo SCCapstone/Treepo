@@ -345,6 +345,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        this.setTitle("Treasured Trees");
+        this.setTitle("Trees and Me");
     }
 }

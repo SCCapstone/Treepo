@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Treasured Trees</string>
+    <string name="app_name">Trees and Me</string>
     <string name="title_activity_maps">Map</string>
     <string name="menu_button_txt">Menu</string>
     <string name="title_activity_navigation_drawer">NavigationDrawer</string>
