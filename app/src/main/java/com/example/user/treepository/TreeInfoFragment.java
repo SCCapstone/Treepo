@@ -224,6 +224,7 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
             treeRef.removeValue();
             imageRef.delete();
             startActivity(new Intent(this, MainActivity.class));
+            MainActivity.currentTreeKey = "Default Tree";
             Toast.makeText(this, "Tree Has Been Deleted", Toast.LENGTH_SHORT).show();
         }
     }
