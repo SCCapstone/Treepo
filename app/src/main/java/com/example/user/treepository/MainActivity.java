@@ -65,7 +65,10 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/*
+Main activity that contains the map with tree icons and a toolbar
+to access login, contact info, search, and tours
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
                    OnMapReadyCallback,
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity
     //hashmap associates database keys with tree markers
     private static HashMap<String, Marker> treeMarkers = new HashMap<String, Marker>();
     //key of the tree which was most recently clicked
-    public static String currentTreeKey = "Default Tree";
+    public static String currentTreeKey = "KiCEdaHCkm2YSPHCNsS";
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //initiate layout elements
         sMapFragment = SupportMapFragment.newInstance();
         auth = FirebaseAuth.getInstance();
 
@@ -110,6 +113,7 @@ public class MainActivity extends AppCompatActivity
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //check if user is logged in and if so display more options
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -135,6 +139,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    //return to previous user activity when back is pressed
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -147,6 +152,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    //navigate to user selected item
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -155,9 +161,11 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
+        //hide map if moving to other option
         if (sMapFragment.isAdded())
             sFm.beginTransaction().hide(sMapFragment).addToBackStack("Map").commit();
 
+        //pull up tree map
         if (id == R.id.nav_map) {
             setTitle("Tree Map");
             if (!sMapFragment.isAdded()) {
@@ -169,29 +177,37 @@ public class MainActivity extends AppCompatActivity
                 setTitle("Tree Map");
             }
 
+        //launch search activity
         } else if (id == R.id.searchbtn) {
             Intent intent = new Intent(MainActivity.this, SearchResult.class);
             startActivity(intent);
 
+        //pull up contact page
         } else if (id == R.id.nav_contact) {
             fm.beginTransaction().replace(R.id.content_frame, new ImportFragment()).addToBackStack("Contact").commit();
             setTitle("Contact Information");
+        //pull up login page
         } else if (id == R.id.nav_login) {
             fm.beginTransaction().replace(R.id.content_frame, new LoginFragment()).addToBackStack("Login").commit();
             setTitle("Log In");
+        //pull up new tree page
         } else if (id == R.id.nav_treeEdit) {
             fm.beginTransaction().replace(R.id.content_frame, new TreeEditFragment()).addToBackStack("Edit").commit();
             setTitle("Add a Tree");
+        //pull up last visited tree
         } else if (id == R.id.nav_treeInfo) {
             Intent intent = new Intent(MainActivity.this, TreeInfoFragment.class);
             startActivity(intent);
             setTitle("Detailed Tree Information");
+        //pull up user registration page
         } else if (id == R.id.nav_registration) {
             fm.beginTransaction().replace(R.id.content_frame, new RegistrationFragment()).addToBackStack("Registration").commit();
             setTitle("Registration");
+        //pull up tour page
         } else if (id == R.id.nav_tour) {
             fm.beginTransaction().replace(R.id.content_frame, new TourFragment()).addToBackStack("Tour").commit();
             setTitle("Treasured Tours");
+        //log out user
         } else if (id == R.id.nav_logout) {
             auth.signOut();
             this.finish();
@@ -207,6 +223,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        //set initial zoom to Columbia
         LatLng Columbia = new LatLng(33.9968342,-81.0290422);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Columbia,14));
         //set up marker click listener
@@ -275,7 +292,6 @@ public class MainActivity extends AppCompatActivity
                 Marker thisTreeMarker = treeMarkers.get(snapshot.getKey());
                 //thisTreeMarker.remove();
                 treeMarkers.remove(snapshot.getKey());
-
             }
 
             @Override
@@ -295,7 +311,7 @@ public class MainActivity extends AppCompatActivity
         //set the key of the tree which was clicked
         currentTreeKey = clickedMarker.getTag().toString();
 
-
+        //pull up tree information page
         Intent intent = new Intent(MainActivity.this, TreeInfoFragment.class);
         startActivity(intent);
         setTitle("Detailed Tree Information");
