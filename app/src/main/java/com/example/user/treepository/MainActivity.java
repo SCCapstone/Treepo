@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
     //hashmap associates database keys with tree markers
     private static HashMap<String, Marker> treeMarkers = new HashMap<String, Marker>();
     //key of the tree which was most recently clicked
-    public static String currentTreeKey = "Default Tree";
+    public static String currentTreeKey = "Tree 59";
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
