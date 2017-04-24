@@ -221,8 +221,8 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
             StorageReference imageRef = storageRef.child("tree_images/" + MainActivity.currentTreeKey + ".jpg");
 
             //remove from database
-            treeRef.removeValue();
-            imageRef.delete();
+//            treeRef.removeValue();
+//            imageRef.delete();
             startActivity(new Intent(this, MainActivity.class));
             MainActivity.currentTreeKey = "Default Tree";
             Toast.makeText(this, "Tree Has Been Deleted", Toast.LENGTH_SHORT).show();
