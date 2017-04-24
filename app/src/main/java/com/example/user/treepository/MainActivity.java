@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity
 
                 //get marker associated with this tree
                 Marker thisTreeMarker = treeMarkers.get(snapshot.getKey());
-                thisTreeMarker.remove();
+                //thisTreeMarker.remove();
                 treeMarkers.remove(snapshot.getKey());
             }
 
