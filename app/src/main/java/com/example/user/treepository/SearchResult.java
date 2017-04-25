@@ -33,7 +33,10 @@ import android.widget.Toast;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * SearchResult is the activity launched from the search menu button.
+ * The activity runs the entire search function. The search filters based
+ * on all tree's ages, heights, species, and their addresses. It returns
+ * to a listview all tree addresses that match the criteria.
  */
 public class SearchResult extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private ListView myList;
@@ -47,20 +50,26 @@ public class SearchResult extends AppCompatActivity implements AdapterView.OnIte
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
-        searchResults = new ArrayList<String>();
-        databaseArray = new ArrayList<ArrayList<String>>();
+        searchResults = new ArrayList<String>(); // The filtered results will come here
+        databaseArray = new ArrayList<ArrayList<String>>(); // This is a 2-dimensional arraylist that will hold all the tree information
         input = (EditText) findViewById(R.id.editSearchText);
         setTitle("Search Menu");
-        Spinner spinner = (Spinner) findViewById(R.id.search_spinner);
+        Spinner spinner = (Spinner) findViewById(R.id.search_spinner); //Spinner to decide which element of the tree to filter based on
         ArrayAdapter<CharSequence> spinner_adapter = ArrayAdapter.createFromResource(this,R.array.spinner_options, android.R.layout.simple_spinner_item);
         spinner.setAdapter(spinner_adapter);
         spinner.setOnItemSelectedListener(this);
-        Button button = (Button) findViewById(R.id.search_button);
+        Button button = (Button) findViewById(R.id.search_button); //Search button
+
+        /* On click of the search button, the onClick function will decide which element the user wants to filter based on.
+         * The onClick function then checks for all elements in the databaseArray that contain the search query as a substring.
+         */
         button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                 searchResults.clear();
+
+
                 if(currentSpinnerSelection.equals("address")){
                     for(int i = 0; i < databaseArray.size(); i++){
                         if(databaseArray.get(i).get(1).toLowerCase().contains(input.getText().toString())){
@@ -94,6 +103,12 @@ public class SearchResult extends AppCompatActivity implements AdapterView.OnIte
             }
         });
         myList = (ListView) findViewById(R.id.listview);
+
+        /* The onItemClick function reacts to an item in the listview being clicked.
+         * It determines which tree was clicked and then sends the users to the information
+         * page of the tree they selected.
+         */
+
         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -114,6 +129,8 @@ public class SearchResult extends AppCompatActivity implements AdapterView.OnIte
 
         database.addChildEventListener(new ChildEventListener() {
             @Override
+
+            // On child added populates the databaseArray
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ArrayList<String> tempArray = new ArrayList<String>();
                 tempArray.add(dataSnapshot.getKey().toString());
@@ -125,6 +142,7 @@ public class SearchResult extends AppCompatActivity implements AdapterView.OnIte
                 databaseArray.add(tempArray);
             }
 
+            // onChildRemoved deleted the edited tree and replaces it with a new tree with the changes
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 for(int i = 0;i < databaseArray.size(); i++){
@@ -145,6 +163,7 @@ public class SearchResult extends AppCompatActivity implements AdapterView.OnIte
             }
 
             @Override
+            // onChildRemoved removes the tree element
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 for(int i = 0;i < databaseArray.size(); i++){
                     if(dataSnapshot.getKey().toString().equals(databaseArray.get(i).get(0))){
