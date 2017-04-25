@@ -19,6 +19,9 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -29,13 +32,22 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class logintest {
+public class AdminEditFeatureTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void logintest() {
+    public void adminEditFeatureTest() {
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(60000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction appCompatImageButton = onView(
                 allOf(withContentDescription("Open navigation drawer"),
                         withParent(withId(R.id.toolbar)),
@@ -46,24 +58,60 @@ public class logintest {
                 allOf(withId(R.id.design_menu_item_text), withText("Login"), isDisplayed()));
         appCompatCheckedTextView.perform(click());
 
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(60000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatEditText = onView(
+                allOf(withId(R.id.editTextEmail), isDisplayed()));
+        appCompatEditText.perform(replaceText("test@tester.com"), closeSoftKeyboard());
+
+        ViewInteraction appCompatEditText3 = onView(
+                allOf(withId(R.id.editTextPassword), isDisplayed()));
+        appCompatEditText3.perform(replaceText("password"), closeSoftKeyboard());
+
+        ViewInteraction appCompatEditText4 = onView(
+                allOf(withId(R.id.editTextPassword), withText("password"), isDisplayed()));
+        appCompatEditText4.perform(pressImeActionButton());
+
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.btnLogin), withText("Log in"), isDisplayed()));
+                allOf(withId(R.id.btnLogin), withText("Log In"), isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.btnLogin), withText("Log in"), isDisplayed()));
-        appCompatButton2.perform(click());
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(3596284);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.btnLogin),
+                allOf(withId(R.id.buttonEditExisting),
                         childAtPosition(
                                 childAtPosition(
                                         IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
-                                        0),
-                                2),
+                                        1),
+                                7),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
-        //assert(false);
+
+        ViewInteraction button2 = onView(
+                allOf(withId(R.id.buttonDeleteTree),
+                        childAtPosition(
+                                childAtPosition(
+                                        IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
+                                        1),
+                                8),
+                        isDisplayed()));
+        button2.check(matches(isDisplayed()));
 
     }
 

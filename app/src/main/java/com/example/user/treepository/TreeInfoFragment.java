@@ -194,7 +194,7 @@ public class TreeInfoFragment extends AppCompatActivity implements View.OnClickL
                 shareIntent.setType("image/*");
                 // Launch sharing dialog for image
                 startActivity(Intent.createChooser(shareIntent, "Share Via"));
-
+                //if failed to retrieve image, share text only
             } else {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);

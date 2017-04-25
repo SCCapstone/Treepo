@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_map" 
+        <item
+            android:id="@+id/nav_map"
             android:title="Tree Map" />
         <item android:title="Treasured Tours"
             android:id="@+id/nav_tour"/>
@@ -15,8 +16,9 @@
             android:title="Contact Information" />
         <item android:title="Add Tree "
             android:id="@+id/nav_treeEdit" />
-        <item android:title="Register New User"
-            android:id="@+id/nav_registration" />
+        <item
+            android:id="@+id/nav_registration"
+            android:title="Register New User" />
         <item android:id="@+id/nav_login"
             android:title="Login" />
         <item android:id="@+id/nav_logout"
